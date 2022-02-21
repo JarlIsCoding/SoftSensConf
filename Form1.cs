@@ -37,7 +37,8 @@ namespace SoftSensConf
             textBoxDateReceived.Invoke((MethodInvoker)delegate
             { 
 
-                textBoxDateReceived.AppendText("Recieved: " + RecievedData); 
+                textBoxDateReceived.AppendText("Recieved: " + RecievedData);
+                
                 textBoxDateReceived.AppendText(Environment.NewLine);
             });
             string[] splittedData = spltDataRecieved(RecievedData);
@@ -189,6 +190,7 @@ namespace SoftSensConf
         {
             serialPort1.WriteLine(kappa(name, lrv, urv, alarml, alarmh));
             textBoxDateReceived.AppendText("sending: " + kappa(name, lrv, urv, alarml, alarmh));
+            textBoxDateReceived.AppendText(Environment.NewLine);
         }
 
         private static string kappa(string name, float lrv, float urv, int alarml, int alarmh)
@@ -302,6 +304,101 @@ namespace SoftSensConf
         private void sendReadConfig()
         {
             serialPort1.WriteLine("readconf");
+        }
+
+
+
+        private void saveToFile()
+        {
+            
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.Filter = "Text Files | *.txt";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                using (Stream s = File.Open(saveFileDialog1.FileName, FileMode.CreateNew))
+                using (StreamWriter sw = new StreamWriter(s))
+                {
+                    sw.WriteLine("writeconf>password>" + lblName.Text + ";" + lblLRV.Text + ";" + lblURV.Text + ";" + lblLowerAlarm.Text + ";" + lblUpperAlarm.Text);
+                }
+
+
+                /*string path = @"C:\Users\Jarl Benjamin\Documents\Arduino\SavedFiles\SoftSensConf.txt";
+
+                // This text is added only once to the file.
+                if (!File.Exists(path))
+                    {
+                        // Create a file to write to.
+                        using (StreamWriter sw = File.CreateText(path))
+                        {
+                        System.IO.FileStream fs =
+                                    (System.IO.FileStream)saveFileDialog1.OpenFile();
+
+                        sw.WriteLine("writeconf>password>" + lblName.Text + ";" + lblLRV.Text + ";" + lblURV.Text + ";" + lblLowerAlarm.Text + ";" + lblUpperAlarm.Text);
+                        }
+                    }
+
+                    // This text is always added, making the file longer over time
+                    // if it is not deleted.
+                    using (StreamWriter sw = File.AppendText(path))
+                    {
+                        sw.WriteLine("writeconf>password>" + lblName.Text + ";" + lblLRV.Text + ";" + lblURV.Text + ";" + lblLowerAlarm.Text + ";" + lblUpperAlarm.Text);
+
+                    }*/
+
+
+            }
+        }
+
+        private void btnLoadFromFile_Click(object sender, EventArgs e)
+        {
+            LoadFromFile();
+        }
+
+        private void LoadFromFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text Files | *.txt";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                
+                txtBoxCurrentConfig.Text = File.ReadAllText(openFileDialog.FileName);
+
+                
+                 
+
+            }
+        }
+
+        private void btnSaveToFile_Click(object sender, EventArgs e)
+        {
+            saveToFile();
+        }
+
+        private void btnApplyLoadedConfigurations_Click(object sender, EventArgs e)
+        {
+            if (serialPort1.IsOpen)
+            {
+                if (txtBoxCurrentConfig.Text.Length > 0)
+                {
+                    serialPort1.WriteLine(txtBoxCurrentConfig.Text);
+                }
+                else
+                {
+                    MessageBox.Show("No loaded configurations");
+                }
+            }
+            else
+            {
+                MessageBox.Show("No device connected");
+            }
+                
+            
+            
+
         }
     }
 
