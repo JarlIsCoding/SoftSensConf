@@ -29,11 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lblConnetionStatus = new System.Windows.Forms.Label();
+            this.btnDisconnect = new System.Windows.Forms.Button();
             this.btnConnect = new System.Windows.Forms.Button();
             this.lblActiveConectStatus = new System.Windows.Forms.Label();
             this.lblConnectionStatus = new System.Windows.Forms.Label();
@@ -43,6 +46,8 @@
             this.comboBoxBitRate = new System.Windows.Forms.ComboBox();
             this.comboBoxPort = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.lblConnetionStatus1 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.btnApplyLoadedConfigurations = new System.Windows.Forms.Button();
             this.txtBoxCurrentConfig = new System.Windows.Forms.TextBox();
@@ -69,6 +74,8 @@
             this.btnLoadFromFile = new System.Windows.Forms.Button();
             this.btnLoadCurrentConfiguration = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
+            this.lblConnetionStatus2 = new System.Windows.Forms.Label();
             this.lblAlarmStatus = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.txtBoxScaledValues = new System.Windows.Forms.TextBox();
@@ -79,6 +86,7 @@
             this.checkBoxEnableSignalReceiveMode = new System.Windows.Forms.CheckBox();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -96,9 +104,13 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(800, 444);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.lblConnetionStatus);
+            this.tabPage1.Controls.Add(this.btnDisconnect);
             this.tabPage1.Controls.Add(this.btnConnect);
             this.tabPage1.Controls.Add(this.lblActiveConectStatus);
             this.tabPage1.Controls.Add(this.lblConnectionStatus);
@@ -114,6 +126,36 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Serial Port Config";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(668, 402);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(97, 13);
+            this.label11.TabIndex = 10;
+            this.label11.Text = "Connection Status:";
+            // 
+            // lblConnetionStatus
+            // 
+            this.lblConnetionStatus.AutoSize = true;
+            this.lblConnetionStatus.BackColor = System.Drawing.Color.Red;
+            this.lblConnetionStatus.ForeColor = System.Drawing.Color.Red;
+            this.lblConnetionStatus.Location = new System.Drawing.Point(771, 402);
+            this.lblConnetionStatus.Name = "lblConnetionStatus";
+            this.lblConnetionStatus.Size = new System.Drawing.Size(15, 13);
+            this.lblConnetionStatus.TabIndex = 9;
+            this.lblConnetionStatus.Text = "D";
+            // 
+            // btnDisconnect
+            // 
+            this.btnDisconnect.Location = new System.Drawing.Point(72, 122);
+            this.btnDisconnect.Name = "btnDisconnect";
+            this.btnDisconnect.Size = new System.Drawing.Size(121, 23);
+            this.btnDisconnect.TabIndex = 8;
+            this.btnDisconnect.Text = "Disconnect";
+            this.btnDisconnect.UseVisualStyleBackColor = true;
+            this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
             // 
             // btnConnect
             // 
@@ -187,6 +229,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.lblConnetionStatus1);
+            this.tabPage2.Controls.Add(this.label10);
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.btnApplyLoadedConfigurations);
             this.tabPage2.Controls.Add(this.txtBoxCurrentConfig);
@@ -219,6 +263,26 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Instrument Config";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // lblConnetionStatus1
+            // 
+            this.lblConnetionStatus1.AutoSize = true;
+            this.lblConnetionStatus1.BackColor = System.Drawing.Color.Red;
+            this.lblConnetionStatus1.ForeColor = System.Drawing.Color.Red;
+            this.lblConnetionStatus1.Location = new System.Drawing.Point(767, 402);
+            this.lblConnetionStatus1.Name = "lblConnetionStatus1";
+            this.lblConnetionStatus1.Size = new System.Drawing.Size(15, 13);
+            this.lblConnetionStatus1.TabIndex = 26;
+            this.lblConnetionStatus1.Text = "D";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(664, 402);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(97, 13);
+            this.label10.TabIndex = 25;
+            this.label10.Text = "Connection Status:";
             // 
             // label5
             // 
@@ -262,7 +326,7 @@
             // 
             this.btnSend.Location = new System.Drawing.Point(507, 12);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(275, 400);
+            this.btnSend.Size = new System.Drawing.Size(275, 201);
             this.btnSend.TabIndex = 20;
             this.btnSend.Text = "Send all ";
             this.btnSend.UseVisualStyleBackColor = true;
@@ -460,6 +524,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label14);
+            this.tabPage3.Controls.Add(this.lblConnetionStatus2);
             this.tabPage3.Controls.Add(this.lblAlarmStatus);
             this.tabPage3.Controls.Add(this.label9);
             this.tabPage3.Controls.Add(this.txtBoxScaledValues);
@@ -475,6 +541,26 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Current Values";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(664, 402);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(97, 13);
+            this.label14.TabIndex = 11;
+            this.label14.Text = "Connection Status:";
+            // 
+            // lblConnetionStatus2
+            // 
+            this.lblConnetionStatus2.AutoSize = true;
+            this.lblConnetionStatus2.BackColor = System.Drawing.Color.Red;
+            this.lblConnetionStatus2.ForeColor = System.Drawing.Color.Red;
+            this.lblConnetionStatus2.Location = new System.Drawing.Point(767, 402);
+            this.lblConnetionStatus2.Name = "lblConnetionStatus2";
+            this.lblConnetionStatus2.Size = new System.Drawing.Size(15, 13);
+            this.lblConnetionStatus2.TabIndex = 10;
+            this.lblConnetionStatus2.Text = "D";
             // 
             // lblAlarmStatus
             // 
@@ -530,17 +616,17 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
             this.chart1.Location = new System.Drawing.Point(7, 7);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Legend = "Legend1";
-            series2.Name = "Vba";
-            this.chart1.Series.Add(series2);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Legend = "Legend1";
+            series3.Name = "Vba";
+            this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(775, 214);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart1";
@@ -554,12 +640,17 @@
             this.checkBoxEnableSignalReceiveMode.TabIndex = 0;
             this.checkBoxEnableSignalReceiveMode.Text = "enable signal receive mode";
             this.checkBoxEnableSignalReceiveMode.UseVisualStyleBackColor = true;
-            this.checkBoxEnableSignalReceiveMode.CheckedChanged += new System.EventHandler(this.checkBoxEnableSignalReceiveMode_CheckedChanged);
+            this.checkBoxEnableSignalReceiveMode.Click += new System.EventHandler(this.checkBoxEnableSignalReceiveMode_Click);
             // 
             // timer1
             // 
             this.timer1.Interval = 5000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // timer2
+            // 
+            this.timer2.Interval = 5000;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // Form1
             // 
@@ -630,6 +721,14 @@
         private System.Windows.Forms.TextBox txtBoxScaledValues;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button btnDisconnect;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lblConnetionStatus;
+        private System.Windows.Forms.Label lblConnetionStatus1;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label lblConnetionStatus2;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 

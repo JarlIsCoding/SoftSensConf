@@ -18,7 +18,8 @@ namespace SoftSensConf
     {
         List<float> analogReading = new List<float>();
         List<string> timeStamp = new List<string>();
-        
+        Dictionary<string, float> listOfFormatedTimeAndScaledDataNumbers = new Dictionary<string, float>();
+
         public Form1()
         {
             InitializeComponent();
@@ -93,10 +94,20 @@ namespace SoftSensConf
             switch (command)
             {
                 case "writeconf":
+                    Console.WriteLine(splittedData[0]);
+                    if (splittedData[0].Trim() != "1")
+                    {
+                        MessageBox.Show("Wrong Password");
+                        break;
+                    }
                     sendReadConfig();
+                    txtBoxName.Invoke((MethodInvoker)delegate
+                    {
+                    clearUserInput();    
+                    });
 
                     break;
-
+                
                 case "readraw":
                     appendTextToTextBox(txtBoxRawValues, splittedData[0]);
                     
@@ -148,8 +159,16 @@ namespace SoftSensConf
                 txtBoxScaledValues.AppendText(Environment.NewLine);
                 chart1.Series["Vba"].Points.DataBindXY(timeStamp, analogReading);
                 chart1.Invalidate();
+                dataAppenderForCart1(formattedTime, scaledDataNumber);
             });
 
+        }
+
+        private void dataAppenderForCart1(string formattedTime, float scaledDataNumber)
+        {
+            
+            listOfFormatedTimeAndScaledDataNumbers.Add(formattedTime, scaledDataNumber);
+            
         }
 
         delegate void SetTextCallback(Label label, string text);
@@ -201,6 +220,8 @@ namespace SoftSensConf
                 lblActiveConectStatus.Text = "Connected " + comboBoxPort.Text;
                 textBoxDateReceived.AppendText("Connectin to port: " + comboBoxPort.Text + " was sucessful!");
                 textBoxDateReceived.AppendText(Environment.NewLine);
+                changeConnetionCouloureToGreen();
+                timer2.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -232,14 +253,8 @@ namespace SoftSensConf
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-
             SendAllConfig();
-            
-            /*if (serialPort1.IsOpen)
-            {
 
-                //serialPort1.WriteLine(SendAllConfig());
-            } // serial string received*/
         }
 
         private void SendAllConfig()
@@ -262,7 +277,7 @@ namespace SoftSensConf
             }
             if (!serialPort1.IsOpen)
             {
-                MessageBox.Show("din Dumme Faen! du må connekte. ");
+                MessageBox.Show("Device is not connected");
                 return;
             }
             
@@ -293,7 +308,7 @@ namespace SoftSensConf
 
         private string ValidateText(string currentName, float currentLRV, float currentURV, int currentLowerAlarm, int currentUpperAlarm)
         {
-            if (currentName.Length == 0) return "name er bad";
+            if (currentName.Length == 0 || currentName.Length > 10) return "Name must be netween one and ten characters";
             if (currentLRV < 0.0 || currentLRV > 500.0) return "LRV er bad range =0-500 ";
             if (currentURV < 0.0 || currentURV > 500.0) return "URV er bad range =0-500";
             if (currentLowerAlarm < 0 || currentLowerAlarm > 440) return "Lower alram value er bad =0- 440";
@@ -399,14 +414,7 @@ namespace SoftSensConf
             if (command == "writeconf")
             {
                 password = askForPassword();
-                if (password != "password") 
-                {
-                    MessageBox.Show("Wrong Password");
-                    return;
-                }
-                
-                
-            writeToArduino = command + ">" + password + ">" + String.Join(";", args);
+                writeToArduino = command + ">" + password + ">" + String.Join(";", args);
             }
             else
             {
@@ -414,7 +422,7 @@ namespace SoftSensConf
             }
             serialPort1.WriteLine(writeToArduino);
             Console.WriteLine(writeToArduino);
-            clearUserInput();
+              
         }
 
         private string askForPassword()
@@ -444,31 +452,6 @@ namespace SoftSensConf
                 {
                     sw.WriteLine( lblName.Text + ";" + lblLRV.Text + ";" + lblURV.Text + ";" + lblLowerAlarm.Text + ";" + lblUpperAlarm.Text);
                 }
-
-
-                /*string path = @"C:\Users\Jarl Benjamin\Documents\Arduino\SavedFiles\SoftSensConf.txt";
-
-                // This text is added only once to the file.
-                if (!File.Exists(path))
-                    {
-                        // Create a file to write to.
-                        using (StreamWriter sw = File.CreateText(path))
-                        {
-                        System.IO.FileStream fs =
-                                    (System.IO.FileStream)saveFileDialog1.OpenFile();
-
-                        sw.WriteLine("writeconf>password>" + lblName.Text + ";" + lblLRV.Text + ";" + lblURV.Text + ";" + lblLowerAlarm.Text + ";" + lblUpperAlarm.Text);
-                        }
-                    }
-
-                    // This text is always added, making the file longer over time
-                    // if it is not deleted.
-                    using (StreamWriter sw = File.AppendText(path))
-                    {
-                        sw.WriteLine("writeconf>password>" + lblName.Text + ";" + lblLRV.Text + ";" + lblURV.Text + ";" + lblLowerAlarm.Text + ";" + lblUpperAlarm.Text);
-
-                    }*/
-
 
             }
         }
@@ -526,7 +509,45 @@ namespace SoftSensConf
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            reascaledValues(); 
+            reascaledValues();
+            
+        }
+
+        private void connectionCheck()
+        {
+            if (serialPort1.IsOpen)
+            {
+                timer2.Enabled = true;
+                changeConnetionCouloureToGreen();
+                return;
+            }
+            timer2.Enabled=false;
+            changeConnetionCouloureToRed();
+            textBoxDateReceived.AppendText("Connection lost!");
+            textBoxDateReceived.AppendText(Environment.NewLine);
+            MessageBox.Show("connection lost");
+            
+        }
+
+        private void changeConnetionCouloureToRed()
+        {
+            lblConnetionStatus.BackColor = Color.Red;
+            lblConnetionStatus.ForeColor = Color.Red;
+            lblConnetionStatus1.BackColor = Color.Red;
+            lblConnetionStatus1.ForeColor = Color.Red;
+            lblConnetionStatus2.ForeColor = Color.Red;
+            lblConnetionStatus2.BackColor = Color.Red;
+            lblActiveConectStatus.Text = "Disconnected";
+        }
+
+        private void changeConnetionCouloureToGreen()
+        {
+            lblConnetionStatus.BackColor = Color.Green;
+            lblConnetionStatus.ForeColor = Color.Green;
+            lblConnetionStatus1.BackColor = Color.Green;
+            lblConnetionStatus1.ForeColor = Color.Green;
+            lblConnetionStatus2.ForeColor = Color.Green;
+            lblConnetionStatus2.BackColor = Color.Green;
         }
 
         private void readStatusValue()
@@ -545,23 +566,64 @@ namespace SoftSensConf
 
         }
 
-        private void checkBoxEnableSignalReceiveMode_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxEnableSignalReceiveMode_Click(object sender, EventArgs e)
         {
             if (!serialPort1.IsOpen)
             {
+                MessageBox.Show("No device connected", serialPort1.IsOpen.ToString());
                 checkBoxEnableSignalReceiveMode.Checked = false;
-                MessageBox.Show("Nå må du korrigere: Åpne porten først", serialPort1.IsOpen.ToString());
+                return;
             }
             if (checkBoxEnableSignalReceiveMode.Checked)
             {
+                listOfFormatedTimeAndScaledDataNumbers.Clear();
                 timer1.Enabled = true;
+
 
             }
             if (!checkBoxEnableSignalReceiveMode.Checked)
             {
                 timer1.Enabled = false;
-            }
+                saveChart1DialogBox();
 
+
+            }
+        }
+       
+
+        private void saveChart1DialogBox()
+        {
+            DialogResult dialogResult = MessageBox.Show("Do you want to save chartdata to file?", "Save Chart", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                saveCartToFile();
+               
+            }
+        }
+
+        private void saveCartToFile()
+        {
+            string formatedScaledDataNumber = listOfFormatedTimeAndScaledDataNumbers.ToString();
+            SaveFileDialog saveFileDialogTimeAndData = new SaveFileDialog();
+
+            saveFileDialogTimeAndData.Filter = "Text Files | *.csv";
+            saveFileDialogTimeAndData.FilterIndex = 2;
+            saveFileDialogTimeAndData.RestoreDirectory = true;
+
+            if (saveFileDialogTimeAndData.ShowDialog() == DialogResult.OK)
+            {
+                using (Stream s = File.Open(saveFileDialogTimeAndData.FileName, FileMode.CreateNew))
+                using (StreamWriter sw = new StreamWriter(s))
+                {
+                    foreach (KeyValuePair<string, float> entry in listOfFormatedTimeAndScaledDataNumbers)
+                    {
+                        sw.Write(entry.Key + "," + entry.Value + "[" + entry.Key + "]; ");
+
+                    }
+                    
+                }
+
+            }
         }
 
         private static DialogResult ShowInputDialog(ref string input)
@@ -603,8 +665,47 @@ namespace SoftSensConf
             DialogResult result = inputBox.ShowDialog();
             input = textBox.Text;
             return result;
-        }   
+        }
 
+        private void btnDisconnect_Click(object sender, EventArgs e)
+        {
+            disconnectArduino();
+            changeConnetionCouloureToRed();
+            timer2.Enabled = false;
+        }
+
+        private void disconnectArduino()
+        {
+            if (serialPort1.IsOpen)
+            {
+                serialPort1.Close();
+                serialPort1.PortName = comboBoxPort.Text;
+                MessageBox.Show("Disconnected: " + comboBoxPort.Text);
+                lblActiveConectStatus.Text = "Disconnected";
+                textBoxDateReceived.AppendText("Disconnection from: " + comboBoxPort.Text + " was sucessful!");
+                textBoxDateReceived.AppendText(Environment.NewLine);
+                return;
+            }
+            MessageBox.Show("No devise connected");
+
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            connectionCheck();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (tabControl1.SelectedIndex)
+            {
+                case 1:
+                    if (serialPort1.IsOpen) sendReadConfig();
+                    
+                    break;
+
+            }
+        }
 
     }
 
