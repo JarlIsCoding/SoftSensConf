@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 
 namespace SoftSensConf
 {
@@ -36,57 +37,25 @@ namespace SoftSensConf
 
         void DataRecievedHandler(object sender, SerialDataReceivedEventArgs e)
         {
-            
-            string RecievedData = ((SerialPort)sender).ReadLine();
-            Console.WriteLine(RecievedData);
-            if (RecievedData.Trim() == "") return;
-            textBoxDateReceived.Invoke((MethodInvoker)delegate
-            { 
-                //if (RecievedData.Contains("."))
-
-                textBoxDateReceived.AppendText("Recieved: " + RecievedData);
-                textBoxDateReceived.AppendText(Environment.NewLine);
-            });
-            List<string> splittedData = spltDataRecieved(RecievedData);
-            string command = splittedData[0];
-            splittedData.RemoveAt(0);
-            
-            messageRecieved(command, splittedData);
-            return;
-
-            //recievedDataHandler(command, args);
-            /*string result = splittedData[0].Trim();
-            if (splittedData.Length == 1 && result == "1")
+            if (serialPort1.IsOpen)
             {
+                string RecievedData = ((SerialPort)sender).ReadLine();
+                Console.WriteLine(RecievedData);
+                if (RecievedData.Trim() == "") return;
                 textBoxDateReceived.Invoke((MethodInvoker)delegate
-                {
-                    textBoxDateReceived.AppendText("successfully wrote to config!");
+                { 
+                    textBoxDateReceived.AppendText("Recieved: " + RecievedData);
                     textBoxDateReceived.AppendText(Environment.NewLine);
-                    sendReadConfig();
                 });
-                
-            }
-            if (splittedData.Length == 5) setLable(splittedData);
-
-            if (splittedData[0] == "readscaled")
-            {
-                textBoxDateReceived.Invoke((MethodInvoker)delegate
-                {
-                string trimedData = RecievedData.Trim();
-                float scaledDataNumber = float.Parse(trimedData, CultureInfo.InvariantCulture); 
-                analogReading.Add(scaledDataNumber);
-                DateTime now = DateTime.Now;
-                string formattedTime = now.Hour + ":" + now.Minute + ":" + now.Second;
-                timeStamp.Add(formattedTime);
-                txtBoxScaledValues.AppendText("Scaled value:" + scaledDataNumber.ToString());
-                    txtBoxScaledValues.AppendText(Environment.NewLine);
-                chart1.Series["Vba"].Points.DataBindXY(timeStamp, analogReading);
-                chart1.Invalidate();
-                });
-            }*/
-           // if (RecievedData)
+                List<string> splittedData = spltDataRecieved(RecievedData);
+                string command = splittedData[0];
+                splittedData.RemoveAt(0);
             
-
+                messageRecieved(command, splittedData);
+                return;
+            }
+            MessageBox.Show("No connection");
+            
         }
 
         private void messageRecieved(string command, List<string> splittedData)
@@ -105,26 +74,31 @@ namespace SoftSensConf
                     {
                     clearUserInput();    
                     });
+                    MessageBox.Show("configurations was successfully changed");
 
                     break;
                 
                 case "readraw":
                     appendTextToTextBox(txtBoxRawValues, splittedData[0]);
-                    
+                    readStatusValue();
+
 
                     break ;
 
                 case "readscaled":
                     readRawValues();
                     plotGraph(splittedData);
+                    
                     break;
                 
                 case "readstatus":
-                    readStatusValue();
+                    //readStatusValue();
+                    changeAlarmstatus(textBoxDateReceived, splittedData[0]);
+
                     break;
                 
                 case "readconf":
-                    setLable(splittedData);
+                    setCurrentConfigurationLable(splittedData);
 
                     break;
 
@@ -134,6 +108,36 @@ namespace SoftSensConf
 
             }
 
+        }
+
+        private void changeAlarmstatus(TextBox textboxAlarmData, string splittedData)
+        {
+            textboxAlarmData.Invoke((MethodInvoker)delegate
+            {
+                if (splittedData.Trim() == "0")
+                {
+                    lblAlarmStatus.Text = "OK";
+                }
+                if (splittedData.Trim() == "1")
+                {
+                    lblAlarmStatus.Text = "Fail. Datatracking stopped";
+                    MessageBox.Show("Alarm! Data received has failed. Datatracking stopped");
+                    timer1.Enabled = false;
+                }
+                if (splittedData.Trim() == "2")
+                {
+                    lblAlarmStatus.Text = "Lower limit alarm. Datatracking stopped";
+                    MessageBox.Show("Lower limit alarm. Datatracking stopped");
+                    timer1.Enabled = false;
+                }
+                if (splittedData.Trim() == "3")
+                {
+                    lblAlarmStatus.Text = "Upper limit alarm. Datatracking stopped";
+                    MessageBox.Show("Upper limit alarm. Datatracking stopped");
+                    timer1.Enabled = false;
+                }
+
+            });
         }
 
         private void appendTextToTextBox(TextBox txtBox, string v)
@@ -149,6 +153,7 @@ namespace SoftSensConf
         {
             textBoxDateReceived.Invoke((MethodInvoker)delegate
             {
+                
                 string trimedData = RecievedData[0];
                 float scaledDataNumber = float.Parse(trimedData, CultureInfo.InvariantCulture);
                 analogReading.Add(scaledDataNumber);
@@ -157,9 +162,12 @@ namespace SoftSensConf
                 timeStamp.Add(formattedTime);
                 txtBoxScaledValues.AppendText("Scaled value:" + scaledDataNumber.ToString());
                 txtBoxScaledValues.AppendText(Environment.NewLine);
+                chart1.ChartAreas[0].AxisX.Title = "Time";
+                chart1.ChartAreas[0].AxisY.Title = "Scaled Value";
                 chart1.Series["Vba"].Points.DataBindXY(timeStamp, analogReading);
                 chart1.Invalidate();
                 dataAppenderForCart1(formattedTime, scaledDataNumber);
+
             });
 
         }
@@ -172,7 +180,7 @@ namespace SoftSensConf
         }
 
         delegate void SetTextCallback(Label label, string text);
-        private void SetText(Label label, string text)
+        private void SetTextInvoker(Label label, string text)
         {
             //Hvis metoden ikke blir kjørt fra tråden som det den prøver
             //å endre på ble laget i, så må den invokes for å kjøre 
@@ -180,7 +188,7 @@ namespace SoftSensConf
             //gjøre endringer.
             if (label.InvokeRequired)
             {
-                SetTextCallback d = new SetTextCallback(SetText);
+                SetTextCallback d = new SetTextCallback(SetTextInvoker);
                 this.Invoke(d, new object[] { label, text });
 
             }
@@ -191,13 +199,13 @@ namespace SoftSensConf
 
         }
 
-        private void setLable(List<string> splittedData)
+        private void setCurrentConfigurationLable(List<string> splittedData)
         {
-            SetText(lblName, splittedData[0]);
-            SetText(lblLRV, splittedData[1]);
-            SetText(lblURV, splittedData[2]);
-            SetText(lblLowerAlarm, splittedData[3]);
-            SetText(lblUpperAlarm, splittedData[4]);
+            SetTextInvoker(lblName, splittedData[0]);
+            SetTextInvoker(lblLRV, splittedData[1]);
+            SetTextInvoker(lblURV, splittedData[2]);
+            SetTextInvoker(lblLowerAlarm, splittedData[3]);
+            SetTextInvoker(lblUpperAlarm, splittedData[4]);
         }
 
         private List<string> spltDataRecieved(string recievedData)
@@ -216,11 +224,13 @@ namespace SoftSensConf
                 serialPort1.PortName = comboBoxPort.Text;
                 while (serialPort1.IsOpen) ;
                 serialPort1.Open();
+                Thread.Sleep(500);
+                changeConnetionCouloureToGreen();
+                sendReadConfig();
                 MessageBox.Show("Tilkoblet " + comboBoxPort.Text);
                 lblActiveConectStatus.Text = "Connected " + comboBoxPort.Text;
                 textBoxDateReceived.AppendText("Connectin to port: " + comboBoxPort.Text + " was sucessful!");
                 textBoxDateReceived.AppendText(Environment.NewLine);
-                changeConnetionCouloureToGreen();
                 timer2.Enabled = true;
             }
             catch (Exception ex)
@@ -253,7 +263,14 @@ namespace SoftSensConf
 
         private void btnSend_Click(object sender, EventArgs e)
         {
+            if (txtBoxName.TextLength == 0 && txtBoxLRV.TextLength == 0 && txtBoxURV.TextLength == 0 && txtBoxLowerAlarm.TextLength == 0 && txtBoxUpperAlarm.TextLength == 0)
+            {
+                MessageBox.Show("No values written");
+                return;
+            }
+
             SendAllConfig();
+            
 
         }
 
@@ -265,7 +282,7 @@ namespace SoftSensConf
             float currentURV = getCurrentURV();
             int currentLowerAlarm = getCurrentLowerAlarm();
             int currentUpperAlarm = getCurrentUpperAlarm();
-            string sendAll = ValidateText(currentName, currentLRV, currentURV, currentLowerAlarm, currentUpperAlarm);
+            string sendAll = validateText(currentName, currentLRV, currentURV, currentLowerAlarm, currentUpperAlarm);
             List<string> list = new List<string> { currentName, currentLRV.ToString(), currentURV.ToString(), currentLowerAlarm.ToString(), currentUpperAlarm.ToString() };
             string command = "writeconf";
             Console.WriteLine(String.Join(", ", list));
@@ -306,7 +323,7 @@ namespace SoftSensConf
         }
 
 
-        private string ValidateText(string currentName, float currentLRV, float currentURV, int currentLowerAlarm, int currentUpperAlarm)
+        private string validateText(string currentName, float currentLRV, float currentURV, int currentLowerAlarm, int currentUpperAlarm)
         {
             if (currentName.Length == 0 || currentName.Length > 10) return "Name must be netween one and ten characters";
             if (currentLRV < 0.0 || currentLRV > 500.0) return "LRV er bad range =0-500 ";
@@ -421,6 +438,7 @@ namespace SoftSensConf
                 writeToArduino = command;
             }
             serialPort1.WriteLine(writeToArduino);
+            
             Console.WriteLine(writeToArduino);
               
         }
@@ -489,8 +507,14 @@ namespace SoftSensConf
                 {
                     string command = "writeconf";
                     List<string> config = txtBoxCurrentConfig.Text.Split(';').ToList();
+                    string validation = validateText(config[0], float.Parse(config[1]), float.Parse(config[2]), int.Parse(config[3]), int.Parse(config[4].Trim()));
+                    if (validation.Length > 0)
+                    {
+                        MessageBox.Show(validation);
+                        return;
+                    }
                     writeConfig(command, config);
-                    //serialPort1.WriteLine(txtBoxCurrentConfig.Text);
+                    
                 }
                 else
                 {
@@ -501,10 +525,6 @@ namespace SoftSensConf
             {
                 MessageBox.Show("No device connected");
             }
-                
-            
-            
-
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -512,6 +532,7 @@ namespace SoftSensConf
             reascaledValues();
             
         }
+
 
         private void connectionCheck()
         {
@@ -562,7 +583,24 @@ namespace SoftSensConf
 
         private void reascaledValues()
         {
-            serialPort1.WriteLine("readscaled");
+            if (serialPort1.IsOpen)
+            {
+                try
+                {
+                serialPort1.WriteLine("readscaled");
+                return;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            timer1.Enabled = false;
+            MessageBox.Show("No connection");
+            if (DialogResult == DialogResult.OK) return;
+            
+            
 
         }
 
@@ -578,15 +616,11 @@ namespace SoftSensConf
             {
                 listOfFormatedTimeAndScaledDataNumbers.Clear();
                 timer1.Enabled = true;
-
-
             }
             if (!checkBoxEnableSignalReceiveMode.Checked)
             {
                 timer1.Enabled = false;
                 saveChart1DialogBox();
-
-
             }
         }
        
@@ -697,16 +731,17 @@ namespace SoftSensConf
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (tabControl1.SelectedIndex)
+           /* switch (tabControl1.SelectedIndex)
             {
                 case 1:
                     if (serialPort1.IsOpen) sendReadConfig();
                     
                     break;
 
-            }
+            }*/
         }
 
+        
     }
 
 }

@@ -300,7 +300,7 @@
             this.btnApplyLoadedConfigurations.Name = "btnApplyLoadedConfigurations";
             this.btnApplyLoadedConfigurations.Size = new System.Drawing.Size(151, 23);
             this.btnApplyLoadedConfigurations.TabIndex = 23;
-            this.btnApplyLoadedConfigurations.Text = "Apply Loaded configurations ";
+            this.btnApplyLoadedConfigurations.Text = "Send Loaded configurations ";
             this.btnApplyLoadedConfigurations.UseVisualStyleBackColor = true;
             this.btnApplyLoadedConfigurations.Click += new System.EventHandler(this.btnApplyLoadedConfigurations_Click);
             // 
@@ -328,7 +328,7 @@
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(275, 201);
             this.btnSend.TabIndex = 20;
-            this.btnSend.Text = "Send all ";
+            this.btnSend.Text = "Send all configurations";
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
@@ -567,9 +567,9 @@
             this.lblAlarmStatus.AutoSize = true;
             this.lblAlarmStatus.Location = new System.Drawing.Point(423, 251);
             this.lblAlarmStatus.Name = "lblAlarmStatus";
-            this.lblAlarmStatus.Size = new System.Drawing.Size(13, 13);
+            this.lblAlarmStatus.Size = new System.Drawing.Size(21, 13);
             this.lblAlarmStatus.TabIndex = 9;
-            this.lblAlarmStatus.Text = "0";
+            this.lblAlarmStatus.Text = "Ok";
             // 
             // label9
             // 
