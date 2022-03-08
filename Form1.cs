@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 
+
 namespace SoftSensConf
 {
     public partial class Form1 : Form
@@ -120,21 +121,27 @@ namespace SoftSensConf
                 }
                 if (splittedData.Trim() == "1")
                 {
+                    timer1.Enabled = false;
                     lblAlarmStatus.Text = "Fail. Datatracking stopped";
                     MessageBox.Show("Alarm! Data received has failed. Datatracking stopped");
-                    timer1.Enabled = false;
+                    saveChart1DialogBox();
+                    checkBoxEnableSignalReceiveMode.Checked = false;
                 }
                 if (splittedData.Trim() == "2")
                 {
+                    timer1.Enabled = false;
                     lblAlarmStatus.Text = "Lower limit alarm. Datatracking stopped";
                     MessageBox.Show("Lower limit alarm. Datatracking stopped");
-                    timer1.Enabled = false;
+                    saveChart1DialogBox();
+                    checkBoxEnableSignalReceiveMode.Checked = false;
                 }
                 if (splittedData.Trim() == "3")
                 {
+                    timer1.Enabled = false;
                     lblAlarmStatus.Text = "Upper limit alarm. Datatracking stopped";
                     MessageBox.Show("Upper limit alarm. Datatracking stopped");
-                    timer1.Enabled = false;
+                    saveChart1DialogBox();
+                    checkBoxEnableSignalReceiveMode.Checked = false;
                 }
 
             });
@@ -164,7 +171,7 @@ namespace SoftSensConf
                 txtBoxScaledValues.AppendText(Environment.NewLine);
                 chart1.ChartAreas[0].AxisX.Title = "Time";
                 chart1.ChartAreas[0].AxisY.Title = "Scaled Value";
-                chart1.Series["Vba"].Points.DataBindXY(timeStamp, analogReading);
+                chart1.Series["Scaled sensor values"].Points.DataBindXY(timeStamp, analogReading);
                 chart1.Invalidate();
                 dataAppenderForCart1(formattedTime, scaledDataNumber);
 
@@ -174,8 +181,15 @@ namespace SoftSensConf
 
         private void dataAppenderForCart1(string formattedTime, float scaledDataNumber)
         {
-            
+          try
+            {
             listOfFormatedTimeAndScaledDataNumbers.Add(formattedTime, scaledDataNumber);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             
         }
 
@@ -312,6 +326,7 @@ namespace SoftSensConf
             txtBoxName.Clear();
             txtBoxURV.Clear();  
             txtBoxUpperAlarm.Clear();
+            
         }
 
         private void writeConfig(string command, List<string> args)
@@ -325,11 +340,11 @@ namespace SoftSensConf
 
         private string validateText(string currentName, float currentLRV, float currentURV, int currentLowerAlarm, int currentUpperAlarm)
         {
-            if (currentName.Length == 0 || currentName.Length > 10) return "Name must be netween one and ten characters";
-            if (currentLRV < 0.0 || currentLRV > 500.0) return "LRV er bad range =0-500 ";
-            if (currentURV < 0.0 || currentURV > 500.0) return "URV er bad range =0-500";
-            if (currentLowerAlarm < 0 || currentLowerAlarm > 440) return "Lower alram value er bad =0- 440";
-            if (currentUpperAlarm < 0 || currentUpperAlarm > 440) return "Upper alram value er bad =0- 440";
+            if (currentName.Length == 0 || currentName.Length > 10) return "Name must be between one and ten characters";
+            if (currentLRV < 0.0 || currentLRV > 500.0) return "Lower rage value must be a number between 0-500 ";
+            if (currentURV < 0.0 || currentURV > 500.0) return "Upper range value must be between 0-500";
+            if (currentLowerAlarm < 0 || currentLowerAlarm > 500) return "Lower alram value must be a wholenumber between 0- 440";
+            if (currentUpperAlarm < 0 || currentUpperAlarm > 500) return "Upper alram value must be a wholenumber between 0- 440";
 
             return ""; 
             
@@ -476,6 +491,7 @@ namespace SoftSensConf
 
         private void btnLoadFromFile_Click(object sender, EventArgs e)
         {
+            clearUserInput();
             LoadFromFile();
         }
 
@@ -485,8 +501,22 @@ namespace SoftSensConf
             openFileDialog.Filter = "Text Files | *.ssc";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                
-                txtBoxCurrentConfig.Text = File.ReadAllText(openFileDialog.FileName);
+                try
+                {
+                    var configValues = File.ReadAllText(openFileDialog.FileName);
+                    var configList = new List<string>(configValues.Split(';').ToList());
+                    txtBoxName.AppendText(configList[0].ToString());
+                    txtBoxLRV.AppendText(configList[1].ToString());
+                    txtBoxURV.AppendText(configList[2].ToString());
+                    txtBoxLowerAlarm.AppendText(configList[3].ToString());
+                    txtBoxUpperAlarm.AppendText(configList[4].ToString().Trim());
+                }
+                      
+                    
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
 
                 
                  
@@ -499,7 +529,7 @@ namespace SoftSensConf
             saveToFile();
         }
 
-        private void btnApplyLoadedConfigurations_Click(object sender, EventArgs e)
+        /*private void btnApplyLoadedConfigurations_Click(object sender, EventArgs e)
         {
             if (serialPort1.IsOpen)
             {
@@ -525,7 +555,7 @@ namespace SoftSensConf
             {
                 MessageBox.Show("No device connected");
             }
-        }
+        }*/
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -547,6 +577,7 @@ namespace SoftSensConf
             textBoxDateReceived.AppendText("Connection lost!");
             textBoxDateReceived.AppendText(Environment.NewLine);
             MessageBox.Show("connection lost");
+            saveCartToFile();
             
         }
 
@@ -703,9 +734,9 @@ namespace SoftSensConf
 
         private void btnDisconnect_Click(object sender, EventArgs e)
         {
+            timer2.Enabled = false;
             disconnectArduino();
             changeConnetionCouloureToRed();
-            timer2.Enabled = false;
         }
 
         private void disconnectArduino()
@@ -741,7 +772,13 @@ namespace SoftSensConf
             }*/
         }
 
-        
+        /*private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Do You Want To Save Your Data", "CodeJuggler", MessageBoxButtons.YesNoCancel);
+            if (dialogResult == DialogResult.Yes) saveCartToFile();
+            else if (dialogResult == DialogResult.Cancel) e.Cancel = true;
+            // funker ikke som tiltenkt
+        }*/
     }
 
 }

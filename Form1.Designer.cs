@@ -48,9 +48,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.lblConnetionStatus1 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btnApplyLoadedConfigurations = new System.Windows.Forms.Button();
-            this.txtBoxCurrentConfig = new System.Windows.Forms.TextBox();
             this.btnSaveToFile = new System.Windows.Forms.Button();
             this.btnSend = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -231,9 +228,6 @@
             // 
             this.tabPage2.Controls.Add(this.lblConnetionStatus1);
             this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.btnApplyLoadedConfigurations);
-            this.tabPage2.Controls.Add(this.txtBoxCurrentConfig);
             this.tabPage2.Controls.Add(this.btnSaveToFile);
             this.tabPage2.Controls.Add(this.btnSend);
             this.tabPage2.Controls.Add(this.label3);
@@ -284,41 +278,13 @@
             this.label10.TabIndex = 25;
             this.label10.Text = "Connection Status:";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 193);
-            this.label5.Margin = new System.Windows.Forms.Padding(5);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(119, 13);
-            this.label5.TabIndex = 24;
-            this.label5.Text = "Loaded Configurations: ";
-            // 
-            // btnApplyLoadedConfigurations
-            // 
-            this.btnApplyLoadedConfigurations.Location = new System.Drawing.Point(7, 217);
-            this.btnApplyLoadedConfigurations.Name = "btnApplyLoadedConfigurations";
-            this.btnApplyLoadedConfigurations.Size = new System.Drawing.Size(151, 23);
-            this.btnApplyLoadedConfigurations.TabIndex = 23;
-            this.btnApplyLoadedConfigurations.Text = "Send Loaded configurations ";
-            this.btnApplyLoadedConfigurations.UseVisualStyleBackColor = true;
-            this.btnApplyLoadedConfigurations.Click += new System.EventHandler(this.btnApplyLoadedConfigurations_Click);
-            // 
-            // txtBoxCurrentConfig
-            // 
-            this.txtBoxCurrentConfig.Location = new System.Drawing.Point(127, 193);
-            this.txtBoxCurrentConfig.Margin = new System.Windows.Forms.Padding(2);
-            this.txtBoxCurrentConfig.Name = "txtBoxCurrentConfig";
-            this.txtBoxCurrentConfig.Size = new System.Drawing.Size(281, 20);
-            this.txtBoxCurrentConfig.TabIndex = 22;
-            // 
             // btnSaveToFile
             // 
             this.btnSaveToFile.Location = new System.Drawing.Point(7, 66);
             this.btnSaveToFile.Name = "btnSaveToFile";
             this.btnSaveToFile.Size = new System.Drawing.Size(151, 23);
             this.btnSaveToFile.TabIndex = 21;
-            this.btnSaveToFile.Text = "Save To File";
+            this.btnSaveToFile.Text = "Save Config To File";
             this.btnSaveToFile.UseVisualStyleBackColor = true;
             this.btnSaveToFile.Click += new System.EventHandler(this.btnSaveToFile_Click);
             // 
@@ -335,12 +301,12 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(440, 12);
+            this.label3.Location = new System.Drawing.Point(423, 12);
             this.label3.Margin = new System.Windows.Forms.Padding(5);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.Size = new System.Drawing.Size(77, 13);
             this.label3.TabIndex = 19;
-            this.label3.Text = "Value:";
+            this.label3.Text = "Current Config:";
             // 
             // label2
             // 
@@ -405,7 +371,7 @@
             // lblUpperAlarm
             // 
             this.lblUpperAlarm.AutoSize = true;
-            this.lblUpperAlarm.Location = new System.Drawing.Point(440, 122);
+            this.lblUpperAlarm.Location = new System.Drawing.Point(423, 122);
             this.lblUpperAlarm.Margin = new System.Windows.Forms.Padding(5);
             this.lblUpperAlarm.Name = "lblUpperAlarm";
             this.lblUpperAlarm.Size = new System.Drawing.Size(25, 13);
@@ -425,7 +391,7 @@
             // lblLowerAlarm
             // 
             this.lblLowerAlarm.AutoSize = true;
-            this.lblLowerAlarm.Location = new System.Drawing.Point(440, 99);
+            this.lblLowerAlarm.Location = new System.Drawing.Point(423, 99);
             this.lblLowerAlarm.Margin = new System.Windows.Forms.Padding(5);
             this.lblLowerAlarm.Name = "lblLowerAlarm";
             this.lblLowerAlarm.Size = new System.Drawing.Size(19, 13);
@@ -445,7 +411,7 @@
             // lblURV
             // 
             this.lblURV.AutoSize = true;
-            this.lblURV.Location = new System.Drawing.Point(440, 75);
+            this.lblURV.Location = new System.Drawing.Point(423, 75);
             this.lblURV.Margin = new System.Windows.Forms.Padding(5);
             this.lblURV.Name = "lblURV";
             this.lblURV.Size = new System.Drawing.Size(25, 13);
@@ -465,7 +431,7 @@
             // lblLRV
             // 
             this.lblLRV.AutoSize = true;
-            this.lblLRV.Location = new System.Drawing.Point(440, 53);
+            this.lblLRV.Location = new System.Drawing.Point(423, 53);
             this.lblLRV.Margin = new System.Windows.Forms.Padding(5);
             this.lblLRV.Name = "lblLRV";
             this.lblLRV.Size = new System.Drawing.Size(13, 13);
@@ -485,7 +451,7 @@
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(440, 30);
+            this.lblName.Location = new System.Drawing.Point(423, 30);
             this.lblName.Margin = new System.Windows.Forms.Padding(5);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(60, 13);
@@ -508,7 +474,7 @@
             this.btnLoadFromFile.Name = "btnLoadFromFile";
             this.btnLoadFromFile.Size = new System.Drawing.Size(151, 23);
             this.btnLoadFromFile.TabIndex = 1;
-            this.btnLoadFromFile.Text = "Load From File";
+            this.btnLoadFromFile.Text = "Load Config From File";
             this.btnLoadFromFile.UseVisualStyleBackColor = true;
             this.btnLoadFromFile.Click += new System.EventHandler(this.btnLoadFromFile_Click);
             // 
@@ -539,7 +505,7 @@
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(792, 418);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Current Values";
+            this.tabPage3.Text = "Data Monitoring";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // label14
@@ -625,7 +591,7 @@
             series3.ChartArea = "ChartArea1";
             series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series3.Legend = "Legend1";
-            series3.Name = "Vba";
+            series3.Name = "Scaled sensor values";
             this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(775, 214);
             this.chart1.TabIndex = 1;
@@ -636,9 +602,9 @@
             this.checkBoxEnableSignalReceiveMode.AutoSize = true;
             this.checkBoxEnableSignalReceiveMode.Location = new System.Drawing.Point(7, 227);
             this.checkBoxEnableSignalReceiveMode.Name = "checkBoxEnableSignalReceiveMode";
-            this.checkBoxEnableSignalReceiveMode.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxEnableSignalReceiveMode.Size = new System.Drawing.Size(156, 17);
             this.checkBoxEnableSignalReceiveMode.TabIndex = 0;
-            this.checkBoxEnableSignalReceiveMode.Text = "enable signal receive mode";
+            this.checkBoxEnableSignalReceiveMode.Text = "Enable signal receive mode";
             this.checkBoxEnableSignalReceiveMode.UseVisualStyleBackColor = true;
             this.checkBoxEnableSignalReceiveMode.Click += new System.EventHandler(this.checkBoxEnableSignalReceiveMode_Click);
             // 
@@ -659,7 +625,8 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "SoftSensConf";
+
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -709,9 +676,6 @@
         private System.Windows.Forms.TextBox txtBoxName;
         private System.Windows.Forms.TextBox txtBoxLRV;
         private System.Windows.Forms.Button btnSaveToFile;
-        private System.Windows.Forms.TextBox txtBoxCurrentConfig;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button btnApplyLoadedConfigurations;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtBoxRawValues;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
