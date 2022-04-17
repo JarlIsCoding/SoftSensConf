@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -81,9 +80,6 @@
             this.txtBoxRawValues = new System.Windows.Forms.TextBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.checkBoxEnableSignalReceiveMode = new System.Windows.Forms.CheckBox();
-            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -101,7 +97,6 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(800, 444);
             this.tabControl1.TabIndex = 0;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage1
             // 
@@ -152,7 +147,6 @@
             this.btnDisconnect.TabIndex = 8;
             this.btnDisconnect.Text = "Disconnect";
             this.btnDisconnect.UseVisualStyleBackColor = true;
-            this.btnDisconnect.Click += new System.EventHandler(this.btnDisconnect_Click);
             // 
             // btnConnect
             // 
@@ -286,7 +280,6 @@
             this.btnSaveToFile.TabIndex = 21;
             this.btnSaveToFile.Text = "Save Config To File";
             this.btnSaveToFile.UseVisualStyleBackColor = true;
-            this.btnSaveToFile.Click += new System.EventHandler(this.btnSaveToFile_Click);
             // 
             // btnSend
             // 
@@ -296,7 +289,6 @@
             this.btnSend.TabIndex = 20;
             this.btnSend.Text = "Send all configurations";
             this.btnSend.UseVisualStyleBackColor = true;
-            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
             // label3
             // 
@@ -476,7 +468,6 @@
             this.btnLoadFromFile.TabIndex = 1;
             this.btnLoadFromFile.Text = "Load Config From File";
             this.btnLoadFromFile.UseVisualStyleBackColor = true;
-            this.btnLoadFromFile.Click += new System.EventHandler(this.btnLoadFromFile_Click);
             // 
             // btnLoadCurrentConfiguration
             // 
@@ -486,7 +477,6 @@
             this.btnLoadCurrentConfiguration.TabIndex = 0;
             this.btnLoadCurrentConfiguration.Text = "Load Current Configuration";
             this.btnLoadCurrentConfiguration.UseVisualStyleBackColor = true;
-            this.btnLoadCurrentConfiguration.Click += new System.EventHandler(this.btnLoadCurrentConfiguration_Click);
             // 
             // tabPage3
             // 
@@ -606,17 +596,6 @@
             this.checkBoxEnableSignalReceiveMode.TabIndex = 0;
             this.checkBoxEnableSignalReceiveMode.Text = "Enable signal receive mode";
             this.checkBoxEnableSignalReceiveMode.UseVisualStyleBackColor = true;
-            this.checkBoxEnableSignalReceiveMode.Click += new System.EventHandler(this.checkBoxEnableSignalReceiveMode_Click);
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 5000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // timer2
-            // 
-            this.timer2.Interval = 5000;
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // Form1
             // 
@@ -626,7 +605,6 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "SoftSensConf";
-
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -648,12 +626,10 @@
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Label lblActiveConectStatus;
         private System.Windows.Forms.Label lblConnectionStatus;
-        private System.Windows.Forms.TextBox textBoxDateReceived;
         private System.Windows.Forms.Label lblBitRate;
         private System.Windows.Forms.Label lblPort;
         private System.Windows.Forms.ComboBox comboBoxBitRate;
         private System.Windows.Forms.ComboBox comboBoxPort;
-        private System.IO.Ports.SerialPort serialPort1;
         private System.Windows.Forms.Button btnLoadFromFile;
         private System.Windows.Forms.Button btnLoadCurrentConfiguration;
         private System.Windows.Forms.Label lblUpperAlarm;
@@ -664,7 +640,7 @@
         private System.Windows.Forms.Label lbltextUpper;
         private System.Windows.Forms.Label lblLRV;
         private System.Windows.Forms.Label lblTextLRV;
-        private System.Windows.Forms.Label lblName;
+        public System.Windows.Forms.Label lblName;
         private System.Windows.Forms.Label lblNameText;
         private System.Windows.Forms.TextBox txtBoxURV;
         private System.Windows.Forms.Button btnSend;
@@ -673,18 +649,17 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtBoxLowerAlarm;
         private System.Windows.Forms.TextBox txtBoxUpperAlarm;
-        private System.Windows.Forms.TextBox txtBoxName;
+        public System.Windows.Forms.TextBox txtBoxName;
         private System.Windows.Forms.TextBox txtBoxLRV;
         private System.Windows.Forms.Button btnSaveToFile;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtBoxRawValues;
+        public System.Windows.Forms.TextBox txtBoxRawValues;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.CheckBox checkBoxEnableSignalReceiveMode;
         private System.Windows.Forms.Label lblAlarmStatus;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtBoxScaledValues;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnDisconnect;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lblConnetionStatus;
@@ -692,7 +667,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label lblConnetionStatus2;
-        private System.Windows.Forms.Timer timer2;
+        public System.Windows.Forms.TextBox textBoxDateReceived;
     }
 }
 
