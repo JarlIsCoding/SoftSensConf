@@ -35,23 +35,92 @@ namespace SoftSensConf
             CultureInfo ci = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = ci;
             Thread.CurrentThread.CurrentUICulture = ci;
-            dau = new DataAcquisitionUnit(comboBoxPort.Text, int.Parse(comboBoxBitRate.Text));
+            dau = new DataAcquisitionUnit();
+            dau.readConfig += readConfigComplete;
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if (dau.connectToSerialPort(comboBoxPort.Text, int.Parse(comboBoxBitRate.Text)))
+           
+            if (isConnected())
             {
                 MessageBox.Show("Connected!");
+                ChangeConnectionStatusLable();
             }
             else
             {
                 MessageBox.Show("Can't connect");
             }
 
-            
+
+        }
+        private bool isConnected()
+        {
+            return dau.connectToSerialPort(comboBoxPort.Text, int.Parse(comboBoxBitRate.Text)) == true;
+        }
+
+        private void ChangeConnectionStatusLable()
+        {
+            if (!isConnected())
+            {
+                lblConnetionStatus.BackColor = Color.Green;
+                lblConnetionStatus.ForeColor = Color.Green;
+                lblConnetionStatus1.BackColor = Color.Green;
+                lblConnetionStatus1.ForeColor = Color.Green;
+                lblConnetionStatus2.BackColor = Color.Green;
+                lblConnetionStatus2.ForeColor = Color.Green;
+                lblActiveConectStatus.Text = "Connected";
+                return;
+            }
+            if (isDisconnected())
+            {
+                lblConnetionStatus.BackColor = Color.Red;
+                lblConnetionStatus.ForeColor = Color.Red;
+                lblConnetionStatus1.BackColor = Color.Red;
+                lblConnetionStatus1.ForeColor = Color.Red;
+                lblConnetionStatus2.BackColor = Color.Red;
+                lblConnetionStatus2.ForeColor = Color.Red;
+                lblActiveConectStatus.Text = "Disconnected";
+            }
+
+        }
+
+
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+            dau.sendstuff();
+        }
+
+
+        public static void readConfigComplete(object sender, bool isComplete)
+        {
+            Console.WriteLine("We made readConfig! UPDATE THE SHIT YO!");
+        }
+
+        private void btnDisconnect_Click(object sender, EventArgs e)
+        {
+            if (isDisconnected())
+            {
+                MessageBox.Show("Disconnected!");
+                ChangeConnectionStatusLable();
+            }
+            else
+            {
+                MessageBox.Show("Can't disconnected");
+            }
+        }
+        private bool isDisconnected()
+        {
+            return dau.disconnectFromSerialport() == true;
+        }
+
+        private void btnLoadCurrentConfiguration_Click(object sender, EventArgs e)
+        {
+            dau.sendCommand("readconf");
+
         }
     }
+
 }
 
 
