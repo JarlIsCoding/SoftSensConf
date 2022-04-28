@@ -37,7 +37,9 @@ namespace SoftSensConf
             Thread.CurrentThread.CurrentUICulture = ci;
             dau = new DataAcquisitionUnit();
             dau.readConfig += readConfigComplete;
+            dau.readScaled += readScaledEventComplete;
         }
+
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -92,9 +94,14 @@ namespace SoftSensConf
         }
 
 
-        public static void readConfigComplete(object sender, bool isComplete)
+        private void readConfigComplete(object sender, List<string> args)
         {
             Console.WriteLine("We made readConfig! UPDATE THE SHIT YO!");
+            Console.WriteLine(dau.tagName);
+            Console.WriteLine(dau.lowerRangeValue);
+            Console.WriteLine(dau.upperRangeValue);
+            Console.WriteLine(dau.lowerAlarm);
+            Console.WriteLine(dau.upperAlarm);
         }
 
         private void btnDisconnect_Click(object sender, EventArgs e)
@@ -118,6 +125,21 @@ namespace SoftSensConf
         {
             dau.sendCommand("readconf");
 
+        }
+
+        private void checkBoxEnableSignalReceiveMode_CheckedChanged(object sender, EventArgs e)
+        {
+            dau.sendCommand("readscaled");
+        }
+        private void readScaledEventComplete(object sender, List<string> scaledValueArgument)
+        {
+           string scaledValue = scaledValueArgument[0];
+            plotGraph(scaledValue);
+            
+        }
+        private void plotGraph(string ScaledValue)
+        {
+            
         }
     }
 

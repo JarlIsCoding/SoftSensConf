@@ -12,60 +12,75 @@ namespace SoftSensConf
     internal class DataAcquisitionUnit
     {
 
-        private string tagName = "somthing";
-        private float lowerRangeValue;
-        private float upperRangeValue;
-        private int lowerAlarm;
-        private int upperAlarm;
+        public string tagName { get; private set; }
+        public float lowerRangeValue { get; private set; }
+        public float upperRangeValue { get; private set; }
+        public int lowerAlarm { get; private set; }
+        public int upperAlarm { get; private set; }
         /*private string portName;
         private int baudRate;*/
         SerialPort serialPort = new SerialPort();
         DataHandler dataHandler = new DataHandler();
         Dictionary<string, string> formattedMessages = new Dictionary<string, string>();
         DataSender dataSender;
-        public event EventHandler<bool> readConfig;
+        public event EventHandler<List<string>> readConfig;
+        public event EventHandler<List<string>> readScaled;
 
         public DataAcquisitionUnit()
         {
-
-            
-            setValues(tagName, lowerRangeValue, upperRangeValue, lowerAlarm, upperAlarm);
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(handleMessage);
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(dataHandler.handleMessage);
             dataSender = new DataSender(serialPort);
-
-
+            dataHandler.newMessage += newMessageEvent;
         }
 
-        private void handleMessage(object sender, SerialDataReceivedEventArgs e)
+        private void newMessageEvent(object sender, DauMessage message)
         {
 
-            DauMessage message = dataHandler.handleMessage(sender, e);
             if (message != null)
             {
-                if (message.sendCommand)
+                bool isSendCommand = message.sendCommandIfTrue;
+                if (isSendCommand)
                 {
                     dataSender.SendCommandToArduino(message.command);
                 }
                 else
                 {
-                    routeCommand(message.command, message.args != null ? message.args : null);
+                    invokeEvents(message.command, message.args != null ? message.args : null);
                 }
             }
 
 
         }
 
-        private void routeCommand(string command, List<string> args)
+        private void invokeEvents(string command, List<string> args)
         {
             switch (command)
             {
                 case "readconf":
-                    readConfig?.Invoke(this, true);
+                    parseAndSetValues(args);
+                    readConfig?.Invoke(this, args);
                     break;
+                case "readscaled":
+                    readScaled?.Invoke(this, args);
+                    break;
+
+
                 default:
                     Console.WriteLine("no match");
                     break;
+
             }
+        }
+
+        private void parseAndSetValues(List<string> args)
+        {
+            string name = args[0];
+            float lowerRangeValue = parseStringToFloat(args[1]);
+            float upperRangeValue = parseStringToFloat(args[2]);
+            int lowerAlarm = parseStringtoInt(args[3]);
+            int upperAlarm = parseStringtoInt(args[4]);
+
+            setValues(name, lowerRangeValue, upperRangeValue, lowerAlarm, upperAlarm);
         }
 
         public void sendCommand(string command)
@@ -106,6 +121,16 @@ namespace SoftSensConf
         public void sendstuff()
         {
             serialPort.WriteLine("writeconf>password>name;0;500;40; 440");
+        }
+
+        private float parseStringToFloat(string stringToParse)
+        {
+            return float.Parse(stringToParse);
+        }
+
+        private int parseStringtoInt(string intToParse)
+        {
+            return int.Parse(intToParse);
         }
     }
 

@@ -10,6 +10,6 @@ namespace SoftSensConf
     {
         public string command;
         public List<string> args;
-        public bool sendCommand;
+        public bool sendCommandIfTrue { get; set; }
     }
 }
