@@ -21,6 +21,7 @@ namespace SoftSensConf
         List<float> analogReading = new List<float>();
         List<string> timeStamp = new List<string>();
         Dictionary<string, float> listOfFormatedTimeAndScaledDataNumbers = new Dictionary<string, float>();
+        Instrument lightSensor = new Instrument();
 
         public Form1()
         {
@@ -35,6 +36,7 @@ namespace SoftSensConf
 
             serialPort1.DataReceived += new SerialDataReceivedEventHandler(DataRecievedHandler);
         }
+
 
         void DataRecievedHandler(object sender, SerialDataReceivedEventArgs e)
         {
@@ -53,6 +55,7 @@ namespace SoftSensConf
                 splittedData.RemoveAt(0);
             
                 messageRecieved(command, splittedData);
+                appendConfigToDatabase(command, splittedData);
                 return;
             }
             MessageBox.Show("No connection");
@@ -314,10 +317,12 @@ namespace SoftSensConf
             
             writeConfig(command, list);
             
+            
 
 
                 
         }
+
 
         private void clearUserInput()
         {
@@ -770,6 +775,28 @@ namespace SoftSensConf
                     break;
 
             }*/
+        }
+        private void appendConfigToDatabase(string command, List<string> recevedData)
+        {
+            if (command == "writeconf")
+            {
+                string InstrumentName = recevedData[0];
+                string lowerRangeValue = recevedData[1];
+                string upperRangeValue = recevedData[2];
+                string alarmLower = recevedData[3];
+                string alarmUpper = recevedData[4];
+            }
+            
+
+
+        }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            lightSensor.instrumentName = "testnavn";
+            lightSensor.upperRangeValue = 500;
+            lightSensor.lowerRangeValue = 40;
+            textBoxDateReceived.Text = Convert.ToString(lightSensor.Span());
         }
 
         /*private void Form1_FormClosing(object sender, FormClosingEventArgs e)
