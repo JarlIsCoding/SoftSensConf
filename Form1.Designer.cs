@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
@@ -71,6 +71,8 @@
             this.btnLoadFromFile = new System.Windows.Forms.Button();
             this.btnLoadCurrentConfiguration = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label26 = new System.Windows.Forms.Label();
+            this.comboBoxTagID = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
             this.lblConnetionStatus2 = new System.Windows.Forms.Label();
             this.lblAlarmStatus = new System.Windows.Forms.Label();
@@ -81,12 +83,43 @@
             this.txtBoxRawValues = new System.Windows.Forms.TextBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.checkBoxEnableSignalReceiveMode = new System.Windows.Forms.CheckBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.btnAddInstrumentToDB = new System.Windows.Forms.Button();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.comboBoxInstrumentFrequency = new System.Windows.Forms.ComboBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.comboBoxInstrumentSensorSettingsID = new System.Windows.Forms.ComboBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.comboBoxiInstrumentIOType = new System.Windows.Forms.ComboBox();
+            this.comboBoxInstrumentMaker = new System.Windows.Forms.ComboBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.txtBoxInstrumentModel = new System.Windows.Forms.TextBox();
+            this.txtBoxInstrumentType = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.txtBoxinstrumentChannel = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.comboBoxDAUId = new System.Windows.Forms.ComboBox();
+            this.comboBoxInstrumentArea = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txtBoxInstrumentTagID = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnAddRDC = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtBoxRDCDecription = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.ComboboxAreaRDC = new System.Windows.Forms.ComboBox();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -94,6 +127,8 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(2, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -485,6 +520,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label26);
+            this.tabPage3.Controls.Add(this.comboBoxTagID);
             this.tabPage3.Controls.Add(this.label14);
             this.tabPage3.Controls.Add(this.lblConnetionStatus2);
             this.tabPage3.Controls.Add(this.lblAlarmStatus);
@@ -502,6 +539,23 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Data Monitoring";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(76, 230);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(59, 13);
+            this.label26.TabIndex = 13;
+            this.label26.Text = "Instrument:";
+            // 
+            // comboBoxTagID
+            // 
+            this.comboBoxTagID.FormattingEnabled = true;
+            this.comboBoxTagID.Location = new System.Drawing.Point(141, 227);
+            this.comboBoxTagID.Name = "comboBoxTagID";
+            this.comboBoxTagID.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxTagID.TabIndex = 12;
             // 
             // label14
             // 
@@ -577,17 +631,17 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(7, 7);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Legend = "Legend1";
-            series1.Name = "Scaled sensor values";
-            this.chart1.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.Legend = "Legend1";
+            series2.Name = "Scaled sensor values";
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(775, 214);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "chart1";
@@ -595,13 +649,297 @@
             // checkBoxEnableSignalReceiveMode
             // 
             this.checkBoxEnableSignalReceiveMode.AutoSize = true;
-            this.checkBoxEnableSignalReceiveMode.Location = new System.Drawing.Point(7, 227);
+            this.checkBoxEnableSignalReceiveMode.Location = new System.Drawing.Point(268, 231);
             this.checkBoxEnableSignalReceiveMode.Name = "checkBoxEnableSignalReceiveMode";
-            this.checkBoxEnableSignalReceiveMode.Size = new System.Drawing.Size(156, 17);
+            this.checkBoxEnableSignalReceiveMode.Size = new System.Drawing.Size(288, 17);
             this.checkBoxEnableSignalReceiveMode.TabIndex = 0;
-            this.checkBoxEnableSignalReceiveMode.Text = "Enable signal receive mode";
+            this.checkBoxEnableSignalReceiveMode.Text = "Enable signal receive mode and store data in databaes ";
             this.checkBoxEnableSignalReceiveMode.UseVisualStyleBackColor = true;
             this.checkBoxEnableSignalReceiveMode.CheckedChanged += new System.EventHandler(this.checkBoxEnableSignalReceiveMode_CheckedChanged);
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.btnAddInstrumentToDB);
+            this.tabPage4.Controls.Add(this.label25);
+            this.tabPage4.Controls.Add(this.label24);
+            this.tabPage4.Controls.Add(this.label23);
+            this.tabPage4.Controls.Add(this.comboBoxInstrumentFrequency);
+            this.tabPage4.Controls.Add(this.label22);
+            this.tabPage4.Controls.Add(this.comboBoxInstrumentSensorSettingsID);
+            this.tabPage4.Controls.Add(this.label21);
+            this.tabPage4.Controls.Add(this.comboBoxiInstrumentIOType);
+            this.tabPage4.Controls.Add(this.comboBoxInstrumentMaker);
+            this.tabPage4.Controls.Add(this.label20);
+            this.tabPage4.Controls.Add(this.label19);
+            this.tabPage4.Controls.Add(this.txtBoxInstrumentModel);
+            this.tabPage4.Controls.Add(this.txtBoxInstrumentType);
+            this.tabPage4.Controls.Add(this.label18);
+            this.tabPage4.Controls.Add(this.txtBoxinstrumentChannel);
+            this.tabPage4.Controls.Add(this.label17);
+            this.tabPage4.Controls.Add(this.label16);
+            this.tabPage4.Controls.Add(this.comboBoxDAUId);
+            this.tabPage4.Controls.Add(this.comboBoxInstrumentArea);
+            this.tabPage4.Controls.Add(this.label15);
+            this.tabPage4.Controls.Add(this.txtBoxInstrumentTagID);
+            this.tabPage4.Controls.Add(this.label13);
+            this.tabPage4.Controls.Add(this.btnAddRDC);
+            this.tabPage4.Controls.Add(this.label12);
+            this.tabPage4.Controls.Add(this.txtBoxRDCDecription);
+            this.tabPage4.Controls.Add(this.label5);
+            this.tabPage4.Controls.Add(this.ComboboxAreaRDC);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(792, 418);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Database input";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // btnAddInstrumentToDB
+            // 
+            this.btnAddInstrumentToDB.Location = new System.Drawing.Point(97, 318);
+            this.btnAddInstrumentToDB.Name = "btnAddInstrumentToDB";
+            this.btnAddInstrumentToDB.Size = new System.Drawing.Size(121, 23);
+            this.btnAddInstrumentToDB.TabIndex = 28;
+            this.btnAddInstrumentToDB.Text = "Add Instrument to DB";
+            this.btnAddInstrumentToDB.UseVisualStyleBackColor = true;
+            this.btnAddInstrumentToDB.Click += new System.EventHandler(this.btnAddInstrumentToDB_Click);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(328, 29);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(85, 13);
+            this.label25.TabIndex = 27;
+            this.label25.Text = "Add RDC under:";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(94, 29);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(111, 13);
+            this.label24.TabIndex = 26;
+            this.label24.Text = "Add Instrument under:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(3, 299);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(60, 13);
+            this.label23.TabIndex = 25;
+            this.label23.Text = "Frequency:";
+            // 
+            // comboBoxInstrumentFrequency
+            // 
+            this.comboBoxInstrumentFrequency.FormattingEnabled = true;
+            this.comboBoxInstrumentFrequency.Location = new System.Drawing.Point(97, 291);
+            this.comboBoxInstrumentFrequency.Name = "comboBoxInstrumentFrequency";
+            this.comboBoxInstrumentFrequency.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxInstrumentFrequency.TabIndex = 24;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(3, 272);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(93, 13);
+            this.label22.TabIndex = 23;
+            this.label22.Text = "Sensor Setting ID:";
+            // 
+            // comboBoxInstrumentSensorSettingsID
+            // 
+            this.comboBoxInstrumentSensorSettingsID.FormattingEnabled = true;
+            this.comboBoxInstrumentSensorSettingsID.Location = new System.Drawing.Point(97, 264);
+            this.comboBoxInstrumentSensorSettingsID.Name = "comboBoxInstrumentSensorSettingsID";
+            this.comboBoxInstrumentSensorSettingsID.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxInstrumentSensorSettingsID.TabIndex = 22;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(3, 245);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(59, 13);
+            this.label21.TabIndex = 21;
+            this.label21.Text = "I / O Type:";
+            // 
+            // comboBoxiInstrumentIOType
+            // 
+            this.comboBoxiInstrumentIOType.FormattingEnabled = true;
+            this.comboBoxiInstrumentIOType.Location = new System.Drawing.Point(97, 237);
+            this.comboBoxiInstrumentIOType.Name = "comboBoxiInstrumentIOType";
+            this.comboBoxiInstrumentIOType.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxiInstrumentIOType.TabIndex = 20;
+            // 
+            // comboBoxInstrumentMaker
+            // 
+            this.comboBoxInstrumentMaker.FormattingEnabled = true;
+            this.comboBoxInstrumentMaker.Location = new System.Drawing.Point(97, 210);
+            this.comboBoxInstrumentMaker.Name = "comboBoxInstrumentMaker";
+            this.comboBoxInstrumentMaker.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxInstrumentMaker.TabIndex = 19;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(3, 217);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(40, 13);
+            this.label20.TabIndex = 18;
+            this.label20.Text = "Maker:";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(3, 191);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(39, 13);
+            this.label19.TabIndex = 16;
+            this.label19.Text = "Model:";
+            // 
+            // txtBoxInstrumentModel
+            // 
+            this.txtBoxInstrumentModel.Location = new System.Drawing.Point(97, 184);
+            this.txtBoxInstrumentModel.Name = "txtBoxInstrumentModel";
+            this.txtBoxInstrumentModel.Size = new System.Drawing.Size(121, 20);
+            this.txtBoxInstrumentModel.TabIndex = 15;
+            // 
+            // txtBoxInstrumentType
+            // 
+            this.txtBoxInstrumentType.Location = new System.Drawing.Point(97, 158);
+            this.txtBoxInstrumentType.Name = "txtBoxInstrumentType";
+            this.txtBoxInstrumentType.Size = new System.Drawing.Size(121, 20);
+            this.txtBoxInstrumentType.TabIndex = 14;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(3, 165);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(86, 13);
+            this.label18.TabIndex = 13;
+            this.label18.Text = "Instrument Type:";
+            // 
+            // txtBoxinstrumentChannel
+            // 
+            this.txtBoxinstrumentChannel.Location = new System.Drawing.Point(97, 132);
+            this.txtBoxinstrumentChannel.Name = "txtBoxinstrumentChannel";
+            this.txtBoxinstrumentChannel.Size = new System.Drawing.Size(121, 20);
+            this.txtBoxinstrumentChannel.TabIndex = 12;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(3, 135);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(49, 13);
+            this.label17.TabIndex = 11;
+            this.label17.Text = "Channel:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(3, 112);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(47, 13);
+            this.label16.TabIndex = 10;
+            this.label16.Text = "DAU ID:";
+            // 
+            // comboBoxDAUId
+            // 
+            this.comboBoxDAUId.FormattingEnabled = true;
+            this.comboBoxDAUId.Location = new System.Drawing.Point(97, 104);
+            this.comboBoxDAUId.Name = "comboBoxDAUId";
+            this.comboBoxDAUId.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxDAUId.TabIndex = 9;
+            // 
+            // comboBoxInstrumentArea
+            // 
+            this.comboBoxInstrumentArea.FormattingEnabled = true;
+            this.comboBoxInstrumentArea.Location = new System.Drawing.Point(97, 77);
+            this.comboBoxInstrumentArea.Name = "comboBoxInstrumentArea";
+            this.comboBoxInstrumentArea.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxInstrumentArea.TabIndex = 8;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(3, 85);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(87, 13);
+            this.label15.TabIndex = 7;
+            this.label15.Text = "Instrument Area: ";
+            // 
+            // txtBoxInstrumentTagID
+            // 
+            this.txtBoxInstrumentTagID.Location = new System.Drawing.Point(97, 51);
+            this.txtBoxInstrumentTagID.Name = "txtBoxInstrumentTagID";
+            this.txtBoxInstrumentTagID.Size = new System.Drawing.Size(121, 20);
+            this.txtBoxInstrumentTagID.TabIndex = 6;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(3, 58);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(88, 13);
+            this.label13.TabIndex = 5;
+            this.label13.Text = "Instrument tagID:";
+            // 
+            // btnAddRDC
+            // 
+            this.btnAddRDC.Location = new System.Drawing.Point(331, 104);
+            this.btnAddRDC.Name = "btnAddRDC";
+            this.btnAddRDC.Size = new System.Drawing.Size(123, 23);
+            this.btnAddRDC.TabIndex = 4;
+            this.btnAddRDC.Text = "Add RDC to Database";
+            this.btnAddRDC.UseVisualStyleBackColor = true;
+            this.btnAddRDC.Click += new System.EventHandler(this.btnAddRDC_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(241, 85);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(84, 13);
+            this.label12.TabIndex = 3;
+            this.label12.Text = "RDC Decription:";
+            // 
+            // txtBoxRDCDecription
+            // 
+            this.txtBoxRDCDecription.Location = new System.Drawing.Point(331, 78);
+            this.txtBoxRDCDecription.Name = "txtBoxRDCDecription";
+            this.txtBoxRDCDecription.Size = new System.Drawing.Size(132, 20);
+            this.txtBoxRDCDecription.TabIndex = 2;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(241, 58);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(79, 13);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Area For RDC: ";
+            // 
+            // ComboboxAreaRDC
+            // 
+            this.ComboboxAreaRDC.FormattingEnabled = true;
+            this.ComboboxAreaRDC.Location = new System.Drawing.Point(331, 50);
+            this.ComboboxAreaRDC.Name = "ComboboxAreaRDC";
+            this.ComboboxAreaRDC.Size = new System.Drawing.Size(132, 21);
+            this.ComboboxAreaRDC.TabIndex = 0;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(792, 418);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Database view";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -619,6 +957,8 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -675,6 +1015,38 @@
         private System.Windows.Forms.Label lblConnetionStatus2;
         public System.Windows.Forms.TextBox textBoxDateReceived;
         private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.Button btnAddRDC;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox txtBoxRDCDecription;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox ComboboxAreaRDC;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox txtBoxInstrumentModel;
+        private System.Windows.Forms.TextBox txtBoxInstrumentType;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox txtBoxinstrumentChannel;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.ComboBox comboBoxDAUId;
+        private System.Windows.Forms.ComboBox comboBoxInstrumentArea;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txtBoxInstrumentTagID;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnAddInstrumentToDB;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.ComboBox comboBoxInstrumentFrequency;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.ComboBox comboBoxInstrumentSensorSettingsID;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.ComboBox comboBoxiInstrumentIOType;
+        private System.Windows.Forms.ComboBox comboBoxInstrumentMaker;
+        private System.Windows.Forms.ComboBox comboBoxTagID;
+        private System.Windows.Forms.Label label26;
     }
 }
 

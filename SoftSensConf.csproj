@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Databaseconnection.cs" />
+    <Compile Include="RemoteDataCollector.cs" />
     <Compile Include="DauMessage.cs" />
     <Compile Include="DataSendeHelper.cs" />
     <Compile Include="DataSender.cs" />

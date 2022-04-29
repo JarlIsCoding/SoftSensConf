@@ -17,59 +17,67 @@ namespace SoftSensConf
         public float upperRangeValue { get; private set; }
         public int lowerAlarm { get; private set; }
         public int upperAlarm { get; private set; }
+        public int rawValue { get; private set; }
+        public float scaledValue { get; private set; }
+        public int alarmStatusValue { get; private set; }
+
         /*private string portName;
         private int baudRate;*/
         SerialPort serialPort = new SerialPort();
         DataHandler dataHandler = new DataHandler();
         Dictionary<string, string> formattedMessages = new Dictionary<string, string>();
         DataSender dataSender;
-        public event EventHandler<List<string>> readConfig;
+        public event EventHandler<bool> readConfig;
         public event EventHandler<List<string>> readScaled;
+        public event EventHandler<List<string>> readStatus;
+        public event EventHandler<List<string>> readraw;
+        RemoteDataCollector remoteDataCollector;
+
 
         public DataAcquisitionUnit()
         {
             serialPort.DataReceived += new SerialDataReceivedEventHandler(dataHandler.handleMessage);
             dataSender = new DataSender(serialPort);
             dataHandler.newMessage += newMessageEvent;
+            
         }
+
 
         private void newMessageEvent(object sender, DauMessage message)
         {
-
-            if (message != null)
+            switch (message.command)
             {
-                bool isSendCommand = message.sendCommandIfTrue;
-                if (isSendCommand)
-                {
-                    dataSender.SendCommandToArduino(message.command);
-                }
-                else
-                {
-                    invokeEvents(message.command, message.args != null ? message.args : null);
-                }
-            }
-
-
-        }
-
-        private void invokeEvents(string command, List<string> args)
-        {
-            switch (command)
-            {
+                case "writeconf":
+                    sendCommand(message.commandToSend);
+                    break;
                 case "readconf":
-                    parseAndSetValues(args);
-                    readConfig?.Invoke(this, args);
+                    parseAndSetValues(message.args);
+                    readConfig?.Invoke(this, true);
                     break;
                 case "readscaled":
-                    readScaled?.Invoke(this, args);
+                    readScaled?.Invoke(this, message.args);
+                    sendCommand(message.commandToSend);
+                    scaledValue = float.Parse(message.args[0]);
                     break;
-
+                case "readraw":
+                    readraw?.Invoke(this, message.args);
+                    sendCommand(message.commandToSend);
+                    rawValue = int.Parse(message.args[0]);
+                    break;
+                case "readstatus":
+                    readStatus?.Invoke(this, message.args);
+                    alarmStatusValue = int.Parse(message.args[0]);
+                    break;
+                
 
                 default:
                     Console.WriteLine("no match");
                     break;
+                  
 
             }
+
+
         }
 
         private void parseAndSetValues(List<string> args)
@@ -83,9 +91,11 @@ namespace SoftSensConf
             setValues(name, lowerRangeValue, upperRangeValue, lowerAlarm, upperAlarm);
         }
 
-        public void sendCommand(string command)
+        public bool sendCommand(string command)
         {
+            if (!serialPort.IsOpen) return false;
             dataSender.SendCommandToArduino(command);
+            return true;
         }
 
         private void setValues(string tagName, float lowerRangeValue, float upperRangeValue, int lowerAlarm, int upperAlarm)
@@ -96,6 +106,7 @@ namespace SoftSensConf
             this.lowerAlarm = lowerAlarm.ToString().Length > 0 ? lowerAlarm : 0;
             this.upperAlarm = upperAlarm.ToString().Length > 0 ? upperAlarm : 400;
         }
+        
         public bool connectToSerialPort(string port, int rate)
         {
             if (!serialPort.IsOpen)

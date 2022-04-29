@@ -20,7 +20,7 @@ namespace SoftSensConf
                 if (RecievedData.Trim() == "") return;               
                 List<string> splittedData = spltDataRecieved(RecievedData);
                 string command = splittedData[0];
-                splittedData.RemoveAt(0);
+                splittedData.RemoveAt(0);            
                 routeMessage(command, splittedData);
         }
 
@@ -30,29 +30,27 @@ namespace SoftSensConf
             switch (command)
             {
                 case "writeconf":
-                    makingWriteconfMessage(message, splittedData);
+                    makingWriteconfMessage(command ,message, splittedData);
                     newMessage.Invoke(this, message);
                     break;
                  case "readraw":
-              
-                     break;
+                    makingReadRawMessage(command, message, splittedData);
+                    newMessage.Invoke(this, message);
+                    break;
 
                  case "readscaled":
-                     makingReadRawMessage(message, splittedData);
+                     makingReadScaledMessage(command, message, splittedData);
                      newMessage.Invoke(this, message);
-                     
-
                      break;
 
-                /* case "readstatus":
-                    //readStatusValue();
-                    changeAlarmstatus(textBoxDateReceived, splittedData[0]);
+                 case "readstatus":
+                    makingChangeAlarmstatusMessage(command, message, splittedData);
+                    newMessage.Invoke(this, message);
 
-                    break; */
+                    break; 
 
                 case "readconf":
                     message.command = "readconf";
-                    message.sendCommandIfTrue = false;
                     message.args = splittedData;
                     Console.WriteLine("test");
                     newMessage.Invoke(this, message);
@@ -66,14 +64,27 @@ namespace SoftSensConf
             }
         }
 
-        private void makingReadRawMessage(DauMessage message, List<string> splittedData)
+        private void makingReadRawMessage(string command, DauMessage message, List<string> splittedData)
         {
-            message.sendCommandIfTrue = true;
-            message.command = "readraw";
+            message.command = command;
+            message.args = splittedData;
+            message.commandToSend = "readstatus";
+        }
+
+        private void makingChangeAlarmstatusMessage(string command, DauMessage message, List<string> splittedData)
+        {
+            message.command = command;
+            message.args = splittedData;  
+        }
+
+        private void makingReadScaledMessage(string command, DauMessage message, List<string> splittedData)
+        {
+            message.command = command;
+            message.commandToSend = "readraw"; // <-- Heg setter kommando jeg ønsker at DAU skal sende når den mottar denne meldingen
             message.args = splittedData;
         }
 
-        private void makingWriteconfMessage(DauMessage message, List<string> splittedData)
+        private void makingWriteconfMessage(string command, DauMessage message, List<string> splittedData)
         {
             
             if (splittedData[0].Trim() != "1")
@@ -81,9 +92,8 @@ namespace SoftSensConf
                 MessageBox.Show("Wrong Password");
                 return;
             }
-            message.command = "readconf";
-            message.sendCommandIfTrue = true;
-            
+            message.command = command;
+            message.commandToSend = "readconf";
         }
 
         private List<string> spltDataRecieved(string recievedData)
@@ -91,7 +101,5 @@ namespace SoftSensConf
 
             return recievedData.Split(';').ToList();
         }
-
-
     }
 }
