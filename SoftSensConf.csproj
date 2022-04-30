@@ -48,12 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PasswordDialog.cs" />
     <Compile Include="Databaseconnection.cs" />
     <Compile Include="RemoteDataCollector.cs" />
     <Compile Include="DauMessage.cs" />
-    <Compile Include="DataSendeHelper.cs" />
     <Compile Include="DataSender.cs" />
-    <Compile Include="DataHanderHelper.cs" />
     <Compile Include="DataHandler.cs" />
     <Compile Include="DataAcquisitionUnit.cs" />
     <Compile Include="Form1.cs">

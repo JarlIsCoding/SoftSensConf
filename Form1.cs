@@ -21,10 +21,9 @@ namespace SoftSensConf
 
         List<float> analogReading = new List<float>();
         List<string> timeStamp = new List<string>();
-        Dictionary<string, float> listOfFormatedTimeAndScaledDataNumbers = new Dictionary<string, float>();
+        Dictionary<string, float> dictionaryOfFormatedTimeAndScaledDataNumbers = new Dictionary<string, float>();
         DataAcquisitionUnit dau;
         Timer readScaledTimer;
-        RemoteDataCollector remoteDataCollector;
         Databaseconnection dbconnection = new Databaseconnection();
 
 
@@ -44,11 +43,12 @@ namespace SoftSensConf
             Thread.CurrentThread.CurrentCulture = ci;
             Thread.CurrentThread.CurrentUICulture = ci;
             dau = new DataAcquisitionUnit();
-            dau.readConfig += readConfigComplete;
-            dau.readScaled += readScaledEventComplete;
-            dau.readStatus += readStatusEventComplete;
-            dau.readraw += readRawEventComplete;
-            dbconnection.connect();
+            startListeners();
+            loadDatafromDatabaseToCombobox();
+        }
+
+        private void loadDatafromDatabaseToCombobox()
+        {
             addAreaToComboBox();
             addInstrumentAreaToComboBox();
             addMakerToComboBox();
@@ -59,15 +59,24 @@ namespace SoftSensConf
             addTagIdToComboBox();
         }
 
-        
+        private void startListeners()
+        {
+            dau.writeconf += writeConfigEventComplete;
+            dau.readConfig += readConfigComplete;
+            dau.readScaled += readScaledEventComplete;
+            dau.readStatus += readStatusEventComplete;
+            dau.readraw += readRawEventComplete;
+        }
+
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-           
+
             if (isConnected())
             {
                 MessageBox.Show("Connected!");
                 ChangeConnectionStatusLable();
+                dau.sendCommand("readconf");
             }
             else
             {
@@ -110,20 +119,87 @@ namespace SoftSensConf
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            dau.sendstuff();
+            formatDataAndSetValues();
+            string password = askForPassword();
+            if (password == "") return;
+            dau.sendCommand(buildWriteConfMessage(password));
         }
 
-
-        private void readConfigComplete(object sender, bool TrueIfComplete)
+        private void formatDataAndSetValues()
         {
-            Console.WriteLine("We made readConfig! UPDATE THE SHIT YO!");
-            Console.WriteLine(dau.tagName);
-            Console.WriteLine(dau.lowerRangeValue);
-            Console.WriteLine(dau.upperRangeValue);
-            Console.WriteLine(dau.lowerAlarm);
-            Console.WriteLine(dau.upperAlarm);
+            string tagname = txtBoxName.Text.Length > 0 ? txtBoxName.Text : lblName.Text;
+            float lrv = float.TryParse(txtBoxLRV.Text, out float reslrv) ? reslrv : float.Parse(lblLRV.Text);
+            float urv = float.TryParse(txtBoxURV.Text, out float resurv) ? resurv : float.Parse(lblURV.Text);
+            int al = int.TryParse(txtBoxLowerAlarm.Text, out int resal) ? resal : int.Parse(lblLowerAlarm.Text);
+            int ul = int.TryParse(txtBoxUpperAlarm.Text, out int resul) ? resul : int.Parse(lblUpperAlarm.Text);
+
+            dau.setValues(tagname, lrv, urv, al, ul);
         }
-        
+
+        private string askForPassword()
+        {
+            string input = "";
+            DialogResult result = PasswordDialog.ShowInputDialog(ref input);
+            if (result == DialogResult.Cancel) return "";
+            return input;
+        }
+
+        private string buildWriteConfMessage(string password)
+        {
+            string name = dau.tagName;
+            string lowerRangeValue = dau.lowerRangeValue.ToString();
+            string upperRangeValue = dau.upperRangeValue.ToString();
+            string lowerAlarm = dau.lowerAlarm.ToString();
+            string upperAlarm = dau.upperAlarm.ToString();
+            StringBuilder writeconfString = new StringBuilder();
+            writeconfString.Append("writeconf");
+            writeconfString.Append(">");
+            writeconfString.Append(password);
+            writeconfString.Append(">");
+            writeconfString.Append(name);
+            writeconfString.Append(";");
+            writeconfString.Append(lowerRangeValue);
+            writeconfString.Append(";");
+            writeconfString.Append(upperRangeValue);
+            writeconfString.Append(";");
+            writeconfString.Append(lowerAlarm);
+            writeconfString.Append(";");
+            writeconfString.Append(upperAlarm);
+            return writeconfString.ToString();
+        }
+
+
+        private void readConfigComplete(object sender, List<string> listOfConfigsValues)
+        {
+
+            Console.WriteLine(sender.ToString());
+            Console.WriteLine("We made readConfig! UPDATE THE SHIT YO!");
+            lblName.Invoke((MethodInvoker)delegate { lblName.Text = listOfConfigsValues[0]; });
+            lblLRV.Invoke((MethodInvoker)delegate { lblLRV.Text = listOfConfigsValues[1]; });
+            lblURV.Invoke((MethodInvoker)delegate { lblURV.Text = listOfConfigsValues[2]; });
+            lblLowerAlarm.Invoke((MethodInvoker)delegate { lblLowerAlarm.Text = listOfConfigsValues[3]; });
+            lblUpperAlarm.Invoke((MethodInvoker)delegate { lblUpperAlarm.Text = listOfConfigsValues[4]; });
+
+        }
+        private void writeConfigEventComplete(object sender, bool result)
+        {
+            if (result)
+            {
+                clearInputs();
+                return;
+            }
+
+            MessageBox.Show("Wrong password browski");
+        }
+
+        private void clearInputs()
+        {
+            lblName.Invoke((MethodInvoker)delegate { txtBoxName.Clear(); });
+            txtBoxLRV.Invoke((MethodInvoker)delegate { txtBoxLRV.Clear(); });
+            txtBoxURV.Invoke((MethodInvoker)delegate { txtBoxURV.Clear(); });
+            txtBoxLowerAlarm.Invoke((MethodInvoker)delegate { txtBoxLowerAlarm.Clear(); });
+            txtBoxUpperAlarm.Invoke((MethodInvoker)delegate { txtBoxUpperAlarm.Clear(); });
+        }
 
         private void btnDisconnect_Click(object sender, EventArgs e)
         {
@@ -161,18 +237,17 @@ namespace SoftSensConf
             checkBoxEnableSignalReceiveMode.Checked = false;
             MessageBox.Show("Vennligst velg et instrument å lagre data på!");
         }
-        private void readScaledEventComplete(object sender, List<string> scaledValueArgument)
+        private void readScaledEventComplete(object sender, string scaledValue)
         {
-           string scaledValue = scaledValueArgument[0];
-            plotGraph(scaledValue);
             
+            plotGraph(scaledValue);
+
             appendTextToTextBox(scaledValue, txtBoxScaledValues);
 
         }
-        private void readStatusEventComplete(object sender, List<string> alarmStatus)
+        private void readStatusEventComplete(object sender, string statusValue)
         {
-            string alarmValue = alarmStatus[0];
-            changeAlarmLable(alarmValue);
+            changeAlarmLable(statusValue);
             appendDataToDataLogTableDatabase();
 
         }
@@ -184,10 +259,9 @@ namespace SoftSensConf
                 lblAlarmStatus.Text = alarmValue;
             });
         }
-        private void readRawEventComplete(object sender, List<string> rawValue)
+        private void readRawEventComplete(object sender, string rawValue)
         {
-            string rawValuestring = rawValue[0];
-            appendTextToTextBox(rawValuestring, txtBoxRawValues);
+            appendTextToTextBox(rawValue, txtBoxRawValues);
         }
 
         private void appendTextToTextBox(string valueString, TextBox txtBox)
@@ -198,7 +272,7 @@ namespace SoftSensConf
                 txtBox.AppendText("Value:" + valueString);
                 txtBox.AppendText(Environment.NewLine);
             });
-           
+
 
         }
 
@@ -209,23 +283,24 @@ namespace SoftSensConf
             DateTime now = DateTime.Now;
             string formattedTime = now.Hour + ":" + now.Minute + ":" + now.Second;
             timeStamp.Add(formattedTime);
-            
+
 
             chart1.Invoke((MethodInvoker)delegate
             {
-            chart1.ChartAreas[0].AxisX.Title = "Time";
-            chart1.ChartAreas[0].AxisY.Title = "Scaled Value";
-            chart1.Series["Scaled sensor values"].Points.DataBindXY(timeStamp, analogReading);
-            chart1.Invalidate();
+                chart1.ChartAreas[0].AxisX.Title = "Time";
+                chart1.ChartAreas[0].AxisY.Title = "Scaled Value";
+                chart1.Series["Scaled sensor values"].Points.DataBindXY(timeStamp, analogReading);
+                chart1.Invalidate();
             });
 
-            dataAppenderForCart1(formattedTime, scaledDataNumber);
+            //dataAppenderForCart1(formattedTime, scaledDataNumber);
+            //Bruktes til å adde data til en dictionary for å lagre det til fil. denne funksjonener er ikke implementert i nye programmet enda.  
         }
         private void dataAppenderForCart1(string formattedTime, float scaledDataNumber)
         {
             try
             {
-                listOfFormatedTimeAndScaledDataNumbers.Add(formattedTime, scaledDataNumber);
+                dictionaryOfFormatedTimeAndScaledDataNumbers.Add(formattedTime, scaledDataNumber);
             }
             catch (Exception ex)
             {
@@ -246,6 +321,7 @@ namespace SoftSensConf
 
             List<string> areaComboBoxList = dbconnection.selectQueryAsList(areaTable, collum, order);
             areaComboBoxList.ForEach(item => ComboboxAreaRDC.Items.Add(item));
+            if (ComboboxAreaRDC.Items.Count > 0) ComboboxAreaRDC.SelectedIndex = 0;
         }
         private void addTagIdToComboBox()
         {
@@ -254,7 +330,7 @@ namespace SoftSensConf
             string order = "ASC";
 
             List<string> tagIdComboBoxList = dbconnection.selectQueryAsList(tagIdTable, collum, order);
-            tagIdComboBoxList.ForEach(item =>  comboBoxTagID.Items.Add(item));
+            tagIdComboBoxList.ForEach(item => comboBoxTagID.Items.Add(item));
         }
 
         private void btnAddRDC_Click(object sender, EventArgs e)
@@ -274,6 +350,10 @@ namespace SoftSensConf
 
             List<string> areaComboBoxList = dbconnection.selectQueryAsList(areaTable, collum, order);
             areaComboBoxList.ForEach(item => comboBoxInstrumentArea.Items.Add(item));
+            if (comboBoxInstrumentArea.Items.Count > 0) comboBoxInstrumentArea.SelectedIndex = 0;
+
+
+
         }
         private void addDAUToComboBox()
         {
@@ -283,6 +363,7 @@ namespace SoftSensConf
 
             List<string> dauComboBoxList = dbconnection.selectQueryAsList(DAUTable, collum, order);
             dauComboBoxList.ForEach(item => comboBoxDAUId.Items.Add(item));
+            if (comboBoxDAUId.Items.Count > 0) comboBoxDAUId.SelectedIndex = 0;
         }
         private void addMakerToComboBox()
         {
@@ -292,6 +373,7 @@ namespace SoftSensConf
 
             List<string> makerComboBoxList = dbconnection.selectQueryAsList(makerTable, collum, order);
             makerComboBoxList.ForEach(item => comboBoxInstrumentMaker.Items.Add(item));
+            if (comboBoxInstrumentMaker.Items.Count > 0) comboBoxInstrumentMaker.SelectedIndex = 0;
         }
         private void addIOTypeToComboBox()
         {
@@ -301,6 +383,7 @@ namespace SoftSensConf
 
             List<string> ioTypeComboBoxList = dbconnection.selectQueryAsList(ioTypeTable, collum, order);
             ioTypeComboBoxList.ForEach(item => comboBoxiInstrumentIOType.Items.Add(item));
+            if (comboBoxiInstrumentIOType.Items.Count > 0) comboBoxiInstrumentIOType.SelectedIndex = 0;
         }
         private void addSensorSettingsToComboBox()
         {
@@ -310,6 +393,7 @@ namespace SoftSensConf
 
             List<string> sensorSettingsComboBoxList = dbconnection.selectQueryAsList(sensorSettingTable, collum, order);
             sensorSettingsComboBoxList.ForEach(item => comboBoxInstrumentSensorSettingsID.Items.Add(item));
+            if (comboBoxInstrumentSensorSettingsID.Items.Count > 0) comboBoxInstrumentSensorSettingsID.SelectedIndex = 0;
         }
         private void addFrequensyToComboBox()
         {
@@ -320,7 +404,30 @@ namespace SoftSensConf
         }
         private void btnAddInstrumentToDB_Click(object sender, EventArgs e)
         {
-            appendDataToInstrumentTableDatabase();
+            if (checkIfAlldataIsAppended()) 
+            {
+                appendDataToInstrumentTableDatabase();
+                return;
+            }
+            MessageBox.Show("fyll inn riktig data i alle feltene");
+
+        }
+
+        private bool checkIfAlldataIsAppended()
+        {
+            if (txtBoxInstrumentTagID.Text.Length == 0) return false;
+            if (comboBoxInstrumentArea.Text.Length == 0) return false;
+            if (comboBoxDAUId.Text.Length == 0) return false;
+            if (txtBoxinstrumentChannel.Text.Length == 0) return false;
+            if (txtBoxInstrumentType.Text.Length == 0) return false;
+            if (txtBoxInstrumentModel.Text.Length == 0) return false;
+            if (comboBoxInstrumentMaker.Text.Length == 0) return false;
+            if (comboBoxiInstrumentIOType.Text.Length == 0) return false;
+            if (comboBoxInstrumentSensorSettingsID.Text.Length == 0) return false;
+            if (comboBoxInstrumentFrequency.Text.Length == 0) return false;
+            return true;
+
+
         }
 
         private void appendDataToInstrumentTableDatabase()
@@ -372,15 +479,48 @@ namespace SoftSensConf
 
             comboBoxTagID.Invoke((MethodInvoker)delegate { tagIdValue = comboBoxTagID.Text; });
 
-            dbconnection.insertQueryForDataLog(Table, datalogErrorCodeColumnName, datalogRawValueColumnName, 
+            dbconnection.insertQueryForDataLog(Table, datalogErrorCodeColumnName, datalogRawValueColumnName,
                                                datalogScaledValueColumnName, datalogTimeStampColumnName, datalogTagIdColumnName, errorStatusvalue,
                                                rawValue, scaledValue, dateTimeNow, tagIdValue);
-            
+
         }
 
-        
-    }
+        private void btnAddCurrentConfogToDB_Click(object sender, EventArgs e)
+        {
+            string table = "SENSOR_SETTINGS";
+            string alarmLowLimitColumnName = "AlarmLowLimit";
+            string alarmUpperLimitColumnName = "AlarmUpperLimit";
+            string lowerRangeValueColumnName = "LowerRangeValue";
+            string upperRangeValueColumnName = "UpperRangeValue";
+            string descriptionColumnName = "Description";
 
+            string alarmLowLimitValue = lblLowerAlarm.Text;
+            string alarmUpperLimitValue = lblUpperAlarm.Text;
+            string lowerRangeValue = lblLRV.Text;
+            string upperRangeValue = lblURV.Text;
+            string descriptionvalue = txtBoxDecriptionCurrentConfig.Text;
+
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add(alarmLowLimitColumnName, alarmLowLimitValue);
+            dict.Add(alarmUpperLimitColumnName, alarmUpperLimitValue);
+            dict.Add(lowerRangeValueColumnName, lowerRangeValue);
+            dict.Add(upperRangeValueColumnName, upperRangeValue);
+            dict.Add(descriptionColumnName, "'" + descriptionvalue + "'");
+            dbconnection.insertConfigWithDictionary(table, dict);
+
+        }
+
+
+        private void btnTestReadscaled_Click(object sender, EventArgs e)
+        {
+            dau.sendCommand("readscaled");
+        }
+
+        private void tabControl1_Selecting_1(object sender, TabControlCancelEventArgs e)
+        {
+            dataGridViewInstrument.DataSource = dbconnection.getInstrumentTableInGrid();
+        }
+    }
 }
 
 

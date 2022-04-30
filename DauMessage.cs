@@ -9,7 +9,7 @@ namespace SoftSensConf
     public class DauMessage
     {
         public string command;
-        public List<string> args;
-        public string commandToSend;
+        public List<string> data;
+        //public string commandToSend;
     }
 }

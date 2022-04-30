@@ -10,11 +10,9 @@ namespace SoftSensConf
     internal class DataSender
     {
         SerialPort serialPort;
-        DataSendeHelper dataSendeHelper;
         public DataSender(SerialPort serialPort)
         {
             this.serialPort = serialPort;
-            dataSendeHelper = new DataSendeHelper(serialPort);
 
         }
 
@@ -24,11 +22,7 @@ namespace SoftSensConf
             send(command);
         }
 
-        public void SendCommandToArduino(string command, List<string> args)
-        {
-            string formattedCommand = dataSendeHelper.formattedCommand(command, args);
-            send(formattedCommand);
-        }
+
 
         private void send(string command)
         {

@@ -21,18 +21,14 @@ namespace SoftSensConf
         public float scaledValue { get; private set; }
         public int alarmStatusValue { get; private set; }
 
-        /*private string portName;
-        private int baudRate;*/
         SerialPort serialPort = new SerialPort();
         DataHandler dataHandler = new DataHandler();
-        Dictionary<string, string> formattedMessages = new Dictionary<string, string>();
         DataSender dataSender;
-        public event EventHandler<bool> readConfig;
-        public event EventHandler<List<string>> readScaled;
-        public event EventHandler<List<string>> readStatus;
-        public event EventHandler<List<string>> readraw;
-        RemoteDataCollector remoteDataCollector;
-
+        public event EventHandler<List<string>> readConfig;
+        public event EventHandler<string> readScaled;
+        public event EventHandler<string> readStatus;
+        public event EventHandler<string> readraw;
+        public event EventHandler<bool> writeconf;
 
         public DataAcquisitionUnit()
         {
@@ -42,42 +38,42 @@ namespace SoftSensConf
             
         }
 
-
         private void newMessageEvent(object sender, DauMessage message)
         {
             switch (message.command)
             {
-                case "writeconf":
-                    sendCommand(message.commandToSend);
-                    break;
                 case "readconf":
-                    parseAndSetValues(message.args);
-                    readConfig?.Invoke(this, true);
+                    parseAndSetValues(message.data);
+                    readConfig?.Invoke(this, message.data);
+                    break;
+                case "writeconf":
+                    bool result = message.data[0].Trim().Equals("1");
+                    if (result) sendCommand("readconf");
+                    writeconf.Invoke(this, result);
                     break;
                 case "readscaled":
-                    readScaled?.Invoke(this, message.args);
-                    sendCommand(message.commandToSend);
-                    scaledValue = float.Parse(message.args[0]);
+                    string scaledValue = message.data[0];
+                    readScaled?.Invoke(this, scaledValue);
+                    sendCommand("readraw");
+                    this.scaledValue = float.Parse(message.data[0]);
                     break;
                 case "readraw":
-                    readraw?.Invoke(this, message.args);
-                    sendCommand(message.commandToSend);
-                    rawValue = int.Parse(message.args[0]);
+                    string rawValue = message.data[0]; 
+                    readraw?.Invoke(this, rawValue);
+                    sendCommand("readstatus");
+                    this.rawValue = int.Parse(message.data[0]);
                     break;
                 case "readstatus":
-                    readStatus?.Invoke(this, message.args);
-                    alarmStatusValue = int.Parse(message.args[0]);
+                    string statusValue = message.data[0];
+                    readStatus?.Invoke(this, statusValue);
+                    this.alarmStatusValue = int.Parse(message.data[0]);
                     break;
-                
 
                 default:
+                    Console.WriteLine("DAU: " + message.command);
                     Console.WriteLine("no match");
                     break;
-                  
-
             }
-
-
         }
 
         private void parseAndSetValues(List<string> args)
@@ -98,7 +94,7 @@ namespace SoftSensConf
             return true;
         }
 
-        private void setValues(string tagName, float lowerRangeValue, float upperRangeValue, int lowerAlarm, int upperAlarm)
+        public void setValues(string tagName, float lowerRangeValue, float upperRangeValue, int lowerAlarm, int upperAlarm)
         {
             this.tagName = tagName.Length > 0 ? tagName : "somthing";
             this.lowerRangeValue = lowerRangeValue.ToString().Length > 0 ? lowerRangeValue : 0;
@@ -117,7 +113,6 @@ namespace SoftSensConf
                 if (serialPort.IsOpen) return true;
             }
             return false;
-
         }
 
         public bool disconnectFromSerialport()
@@ -129,11 +124,7 @@ namespace SoftSensConf
             }
             return false ;
         }
-        public void sendstuff()
-        {
-            serialPort.WriteLine("writeconf>password>name;0;500;40; 440");
-        }
-
+        
         private float parseStringToFloat(string stringToParse)
         {
             return float.Parse(stringToParse);

@@ -46,6 +46,9 @@
             this.comboBoxBitRate = new System.Windows.Forms.ComboBox();
             this.comboBoxPort = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtBoxDecriptionCurrentConfig = new System.Windows.Forms.TextBox();
+            this.btnAddCurrentConfogToDB = new System.Windows.Forms.Button();
             this.lblConnetionStatus1 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.btnSaveToFile = new System.Windows.Forms.Button();
@@ -71,6 +74,7 @@
             this.btnLoadFromFile = new System.Windows.Forms.Button();
             this.btnLoadCurrentConfiguration = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnTestReadscaled = new System.Windows.Forms.Button();
             this.label26 = new System.Windows.Forms.Label();
             this.comboBoxTagID = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -113,6 +117,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.ComboboxAreaRDC = new System.Windows.Forms.ComboBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.dataGridViewInstrument = new System.Windows.Forms.DataGridView();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -120,6 +125,8 @@
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewInstrument)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -129,11 +136,13 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Location = new System.Drawing.Point(2, 3);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(800, 444);
+            this.tabControl1.Size = new System.Drawing.Size(800, 450);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting_1);
             // 
             // tabPage1
             // 
@@ -151,7 +160,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(792, 418);
+            this.tabPage1.Size = new System.Drawing.Size(792, 424);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Serial Port Config";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -242,6 +251,7 @@
             // 
             // comboBoxBitRate
             // 
+            this.comboBoxBitRate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxBitRate.FormattingEnabled = true;
             this.comboBoxBitRate.Location = new System.Drawing.Point(72, 65);
             this.comboBoxBitRate.Name = "comboBoxBitRate";
@@ -250,6 +260,7 @@
             // 
             // comboBoxPort
             // 
+            this.comboBoxPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPort.FormattingEnabled = true;
             this.comboBoxPort.Location = new System.Drawing.Point(72, 38);
             this.comboBoxPort.Name = "comboBoxPort";
@@ -258,6 +269,9 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label27);
+            this.tabPage2.Controls.Add(this.txtBoxDecriptionCurrentConfig);
+            this.tabPage2.Controls.Add(this.btnAddCurrentConfogToDB);
             this.tabPage2.Controls.Add(this.lblConnetionStatus1);
             this.tabPage2.Controls.Add(this.label10);
             this.tabPage2.Controls.Add(this.btnSaveToFile);
@@ -285,10 +299,38 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(792, 418);
+            this.tabPage2.Size = new System.Drawing.Size(792, 424);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Instrument Config";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(504, 250);
+            this.label27.Margin = new System.Windows.Forms.Padding(5);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(170, 13);
+            this.label27.TabIndex = 29;
+            this.label27.Text = "Add Description for Current Config:\r\n";
+            // 
+            // txtBoxDecriptionCurrentConfig
+            // 
+            this.txtBoxDecriptionCurrentConfig.Location = new System.Drawing.Point(507, 271);
+            this.txtBoxDecriptionCurrentConfig.Name = "txtBoxDecriptionCurrentConfig";
+            this.txtBoxDecriptionCurrentConfig.Size = new System.Drawing.Size(149, 20);
+            this.txtBoxDecriptionCurrentConfig.TabIndex = 28;
+            this.txtBoxDecriptionCurrentConfig.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // btnAddCurrentConfogToDB
+            // 
+            this.btnAddCurrentConfogToDB.Location = new System.Drawing.Point(507, 219);
+            this.btnAddCurrentConfogToDB.Name = "btnAddCurrentConfogToDB";
+            this.btnAddCurrentConfogToDB.Size = new System.Drawing.Size(151, 23);
+            this.btnAddCurrentConfogToDB.TabIndex = 27;
+            this.btnAddCurrentConfogToDB.Text = "Add Current Config To DB";
+            this.btnAddCurrentConfogToDB.UseVisualStyleBackColor = true;
+            this.btnAddCurrentConfogToDB.Click += new System.EventHandler(this.btnAddCurrentConfogToDB_Click);
             // 
             // lblConnetionStatus1
             // 
@@ -520,6 +562,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.btnTestReadscaled);
             this.tabPage3.Controls.Add(this.label26);
             this.tabPage3.Controls.Add(this.comboBoxTagID);
             this.tabPage3.Controls.Add(this.label14);
@@ -535,10 +578,20 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(792, 418);
+            this.tabPage3.Size = new System.Drawing.Size(792, 424);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Data Monitoring";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // btnTestReadscaled
+            // 
+            this.btnTestReadscaled.Location = new System.Drawing.Point(353, 392);
+            this.btnTestReadscaled.Name = "btnTestReadscaled";
+            this.btnTestReadscaled.Size = new System.Drawing.Size(96, 23);
+            this.btnTestReadscaled.TabIndex = 14;
+            this.btnTestReadscaled.Text = "Test Readscaled";
+            this.btnTestReadscaled.UseVisualStyleBackColor = true;
+            this.btnTestReadscaled.Click += new System.EventHandler(this.btnTestReadscaled_Click);
             // 
             // label26
             // 
@@ -690,7 +743,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(792, 418);
+            this.tabPage4.Size = new System.Drawing.Size(792, 424);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Database input";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -734,6 +787,7 @@
             // 
             // comboBoxInstrumentFrequency
             // 
+            this.comboBoxInstrumentFrequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxInstrumentFrequency.FormattingEnabled = true;
             this.comboBoxInstrumentFrequency.Location = new System.Drawing.Point(97, 291);
             this.comboBoxInstrumentFrequency.Name = "comboBoxInstrumentFrequency";
@@ -751,6 +805,7 @@
             // 
             // comboBoxInstrumentSensorSettingsID
             // 
+            this.comboBoxInstrumentSensorSettingsID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxInstrumentSensorSettingsID.FormattingEnabled = true;
             this.comboBoxInstrumentSensorSettingsID.Location = new System.Drawing.Point(97, 264);
             this.comboBoxInstrumentSensorSettingsID.Name = "comboBoxInstrumentSensorSettingsID";
@@ -768,6 +823,7 @@
             // 
             // comboBoxiInstrumentIOType
             // 
+            this.comboBoxiInstrumentIOType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxiInstrumentIOType.FormattingEnabled = true;
             this.comboBoxiInstrumentIOType.Location = new System.Drawing.Point(97, 237);
             this.comboBoxiInstrumentIOType.Name = "comboBoxiInstrumentIOType";
@@ -776,6 +832,7 @@
             // 
             // comboBoxInstrumentMaker
             // 
+            this.comboBoxInstrumentMaker.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxInstrumentMaker.FormattingEnabled = true;
             this.comboBoxInstrumentMaker.Location = new System.Drawing.Point(97, 210);
             this.comboBoxInstrumentMaker.Name = "comboBoxInstrumentMaker";
@@ -850,6 +907,7 @@
             // 
             // comboBoxDAUId
             // 
+            this.comboBoxDAUId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDAUId.FormattingEnabled = true;
             this.comboBoxDAUId.Location = new System.Drawing.Point(97, 104);
             this.comboBoxDAUId.Name = "comboBoxDAUId";
@@ -858,6 +916,7 @@
             // 
             // comboBoxInstrumentArea
             // 
+            this.comboBoxInstrumentArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxInstrumentArea.FormattingEnabled = true;
             this.comboBoxInstrumentArea.Location = new System.Drawing.Point(97, 77);
             this.comboBoxInstrumentArea.Name = "comboBoxInstrumentArea";
@@ -926,6 +985,7 @@
             // 
             // ComboboxAreaRDC
             // 
+            this.ComboboxAreaRDC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboboxAreaRDC.FormattingEnabled = true;
             this.ComboboxAreaRDC.Location = new System.Drawing.Point(331, 50);
             this.ComboboxAreaRDC.Name = "ComboboxAreaRDC";
@@ -934,12 +994,22 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.dataGridViewInstrument);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(792, 418);
+            this.tabPage5.Size = new System.Drawing.Size(792, 424);
             this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Database view";
+            this.tabPage5.Text = "Instrument view";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // dataGridViewInstrument
+            // 
+            this.dataGridViewInstrument.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewInstrument.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewInstrument.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewInstrument.Name = "dataGridViewInstrument";
+            this.dataGridViewInstrument.Size = new System.Drawing.Size(792, 424);
+            this.dataGridViewInstrument.TabIndex = 0;
             // 
             // Form1
             // 
@@ -959,6 +1029,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewInstrument)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1047,6 +1119,11 @@
         private System.Windows.Forms.ComboBox comboBoxInstrumentMaker;
         private System.Windows.Forms.ComboBox comboBoxTagID;
         private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Button btnAddCurrentConfogToDB;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.TextBox txtBoxDecriptionCurrentConfig;
+        private System.Windows.Forms.DataGridView dataGridViewInstrument;
+        private System.Windows.Forms.Button btnTestReadscaled;
     }
 }
 
